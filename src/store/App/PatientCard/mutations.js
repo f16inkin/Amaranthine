@@ -3,6 +3,10 @@ export const increment = state => {
   state.history.push('increment')
 }
 
+export const changeView = state => {
+  state.currentView = 'Cards'
+}
+
 export const GET_CARD = (state, card) => {
   state.card = card
   state.card.passport = card.passportSerial + ' ' + card.passportNumber

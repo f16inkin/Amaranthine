@@ -6,6 +6,10 @@ export const increment = ({ commit }) => {
   commit('increment')
 }
 
+export const changeView = ({ commit }) => {
+  commit('changeView')
+}
+
 export const getCardAction = ({ commit }, id) => {
   return axios.get(`${apiUrl}/api/v1/cards/${id}`)
     .then(function (response) {
