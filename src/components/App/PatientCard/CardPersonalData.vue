@@ -4,14 +4,26 @@
             <i class="pi pi-user p-text-bold" style="color: #15cc15"><span class="p-text-bold" style="color: black"> Персональные данные</span></i>
         </template>
         <template #icons>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="toggle" v-tooltip.top="'Редактировать'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="!onEdit" v-tooltip.top="'Редактировать'">
                 <span class="pi pi-pencil"></span>
             </button>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="toggle" v-tooltip.top="'Сохранить'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="onEdit" v-tooltip.top="'Сохранить'">
                 <span class="pi pi-save"></span>
             </button>
         </template>
-        <div class="p-grid">
+        <div class="p-grid" v-show="onEdit">
+            <div class="p-col-3">
+                <div class="p-mb-2">
+                    <label for="card-number" class="p-text-bold">№ карты:<i style="color:red">*</i></label>
+                </div>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-user"></i>
+                    </span>
+                    <InputText id="card-number" type="text" class="p-inputtext-sm" v-model="card.CardNumber" placeholder="Введите номер карты"/>
+                </div>
+            </div>
+            <div class="p-col-9"></div>
             <div class="p-col-4">
                 <div class="p-mb-2">
                     <label for="surname" class="p-text-bold">Фамилия:<i style="color:red">*</i></label>
@@ -20,7 +32,7 @@
                     <span class="p-inputgroup-addon">
                     <i class="pi pi-user"></i>
                     </span>
-                    <InputText id="surname" type="text" class="p-inputtext-sm" placeholder="Введите фамилию"/>
+                    <InputText id="surname" type="text" class="p-inputtext-sm"  v-model="card.Surname" placeholder="Введите фамилию"/>
                 </div>
             </div>
             <div class="p-col-4">
@@ -31,7 +43,7 @@
                     <span class="p-inputgroup-addon">
                     <i class="pi pi-user"></i>
                     </span>
-                    <InputText id="first-name" type="text" class="p-inputtext-sm" placeholder="Введите имя"/>
+                    <InputText id="first-name" type="text" class="p-inputtext-sm"  v-model="card.FirstName" placeholder="Введите имя"/>
                 </div>
             </div>
             <div class="p-col-4">
@@ -42,7 +54,7 @@
                    <span class="p-inputgroup-addon">
                    <i class="pi pi-user"></i>
                     </span>
-                    <InputText id="second-name" type="text" class="p-inputtext-sm" placeholder="Введите отчество"/>
+                    <InputText id="second-name" type="text" class="p-inputtext-sm" v-model="card.SecondName" placeholder="Введите отчество"/>
                 </div>
             </div>
             <div class="p-col-4">
@@ -53,16 +65,53 @@
                     <span class="p-inputgroup-addon">
                         <i class="pi pi-user"></i>
                     </span>
-                    <InputText id="second-name" type="date" class="p-inputtext-sm"/>
+                    <InputText id="second-name" type="date"  v-model="card.DateBirth" class="p-inputtext-sm"/>
                 </div>
             </div>
             <div class="p-col-4">
                 <div class="p-mb-2">
                     <label class="p-text-bold">Пол<i style="color:red">*</i></label>
                 </div>
-                <div v-for="category of categories" :key="category.key" class="p-field-radiobutton">
-                    <RadioButton :id="category.key" name="category" :value="category" v-model="selectedCategory"/>
-                    <label :for="category.key">{{category.name}}</label>
+
+            </div>
+        </div>
+        <div class="p-grid" v-show="!onEdit">
+            <div class="p-col-3">
+                <div class="p-mb-2">
+                    <label class="p-text-bold">№ карты:</label>
+                </div>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-user"></i>
+                    </span>
+                    <InputText type="text" v-model="card.CardNumber" class="p-inputtext-sm" disabled/>
+                </div>
+            </div>
+            <div class="p-col-9">
+                <div class="p-mb-2">
+                    <label class="p-text-bold">ФИО пациента:</label>
+                </div>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-user"></i>
+                    </span>
+                    <InputText type="text" v-model="fullName" class="p-inputtext-sm" disabled/>
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="p-mb-2">
+                    <label class="p-text-bold">Дата рождения</label>
+                </div>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-user"></i>
+                    </span>
+                    <InputText type="date" v-model="card.DateBirth" class="p-inputtext-sm" disabled/>
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="p-mb-2">
+                    <label class="p-text-bold">Пол<i style="color:red">*</i></label>
                 </div>
             </div>
         </div>
@@ -70,21 +119,31 @@
 </template>
 
 <script>
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 export default {
   name: 'CardPersonalData',
-  data () {
-    return {
-      city: null,
-      categories: [{ name: 'Мужской', key: 1 }, { name: 'Женский', key: 2 }],
-      selectedCategory: null
+  setup () {
+    const store = useStore()
+    const onEdit = ref(false)
+    const card = computed(() => store.state.card.patientCard)
+    const fullName = computed(() => (card.value.Surname + ' ' + card.value.FirstName + ' ' + card.value.SecondName))
+    const changeEditMode = () => {
+      onEdit.value = !onEdit.value
+      console.log(store.state.card.patientCard)
     }
-  },
-  created () {
-    this.selectedCategory = this.categories[0]
+    return {
+      card,
+      changeEditMode,
+      onEdit,
+      fullName
+      // card: computed(() => store.state.card.patientCard),
+      // fullName: computed(() => (card.value.Surname + ' ' + card.value.FirstName))
+    }
   }
 }
 </script>
 
-<style scoped>
+<style >
 
 </style>

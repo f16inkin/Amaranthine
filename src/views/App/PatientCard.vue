@@ -5,8 +5,8 @@
                <template #left>
                    <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
                    <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
-                   <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" />
-                   <SplitButton label="Печать талона" icon="pi pi-print" :model="items"></SplitButton>
+                   <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="getCardAction()" />
+                   <SplitButton  icon="pi pi-print" class="p-button-secondary" :model="items"></SplitButton>
                </template>
                <template #right>
                    <div class="p-inputgroup">
@@ -25,7 +25,6 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
 import Card from '../../components/App/PatientCard/Card'
 import Cards from '../../components/App/PatientCard/Cards'
 import Button from 'primevue/components/button/Button'
@@ -36,8 +35,6 @@ export default {
   components: { SplitButton, InputText, Button, Card, Cards },
   setup () {
     const store = useStore()
-    const route = useRoute()
-    console.log(store.state.card.currentView)
     const items = [
       {
         label: 'Амбулаторный',
@@ -55,8 +52,6 @@ export default {
       }
     ]
     return {
-      count: computed(() => store.state.card.count),
-      getCardAction: () => store.dispatch('card/getCardAction', route.params.id),
       changeView: () => store.dispatch('card/changeView'),
       currentView: computed(() => store.state.card.currentView),
       items

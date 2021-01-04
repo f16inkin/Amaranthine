@@ -2,16 +2,12 @@
   <div class="card-wrapper">
     <div class="card-body">
         <div class="p-grid">
-            <div class="p-col-2" style="border: solid 1px">
-                <div class="p-d-flex p-p-3 card">
-                    <Button type="Button" icon="pi pi-check" class="p-mr-2" />
-                    <Button type="Button" icon="pi pi-trash" class="p-button-danger"/>
-                    <Button type="Button" icon="pi pi-search" class="p-ml-auto p-button-help"/>
-                    <Button type="Button" icon="pi pi-search" class="p-ml-1 p-button-help"/>
-                    <Button type="Button" icon="pi pi-search" class="p-ml-1 p-button-help"/>
+            <div class="p-col-3">
+                <div class="card">
+                    <CardTablet></CardTablet>
                 </div>
             </div>
-            <div class="p-col-10">
+            <div class="p-col-9">
                 <div class="card">
                     <div class="p-grid p-fluid">
                         <div class="p-col-12">
@@ -46,14 +42,21 @@
 </template>
 
 <script>
-
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 import CardPersonalData from './CardPersonalData'
 import CardDocuments from './CardDocuments'
 import CardAddresses from './CardAddresses'
 import CardAdditionally from './CardAdditionally'
+import CardTablet from './CardTablet'
 export default {
   name: 'Card',
-  components: { CardAdditionally, CardAddresses, CardDocuments, CardPersonalData }
+  components: { CardTablet, CardAdditionally, CardAddresses, CardDocuments, CardPersonalData },
+  setup () {
+    const store = useStore()
+    const route = useRoute()
+    store.dispatch('card/getCardAction', route.params.id)
+  }
 }
 </script>
 
@@ -65,7 +68,7 @@ export default {
     }
     .card{
         background: var(--surface-e);
-        padding: 1rem;
+        padding: 0.5rem;
         -webkit-box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
         box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
         border-radius: 4px;

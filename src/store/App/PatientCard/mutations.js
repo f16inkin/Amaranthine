@@ -8,10 +8,10 @@ export const changeView = state => {
 }
 
 export const GET_CARD = (state, card) => {
-  state.card = card
-  state.card.passport = card.passportSerial + ' ' + card.passportNumber
-  state.card.birthCertificate = card.birthCertificateSerial + ' ' + card.birthCertificateNumber
-  state.currentView = 'Card'
-  state.cards = []
-  state.isAllowButtons = true
+  state.patientCard = card
+  // state.card.passport = card.passportSerial + ' ' + card.passportNumber
+  // state.card.birthCertificate = card.birthCertificateSerial + ' ' + card.birthCertificateNumber
+  // state.currentView = 'Card'
+  // state.cards = []
+  // state.isAllowButtons = true
 }
