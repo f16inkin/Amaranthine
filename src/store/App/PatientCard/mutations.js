@@ -8,10 +8,10 @@ export const changeView = state => {
 }
 
 export const GET_CARD = (state, card) => {
+  Object.keys(card).forEach(function (k) {
+    card[k] = card[k] ? card[k] : ''
+    // console.log(k + ' - ' + card[k])
+  })
   state.patientCard = card
-  // state.card.passport = card.passportSerial + ' ' + card.passportNumber
-  // state.card.birthCertificate = card.birthCertificateSerial + ' ' + card.birthCertificateNumber
-  // state.currentView = 'Card'
-  // state.cards = []
-  // state.isAllowButtons = true
+  state.patientCard.Gender = card.Gender.toString()
 }

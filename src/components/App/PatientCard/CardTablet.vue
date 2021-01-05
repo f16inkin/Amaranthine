@@ -24,11 +24,11 @@
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Дата рождения:</span>
             </div>
-            <div class="p-col-6">{{ dateBirth }} {{ yo}}</div>
+            <div class="p-col-6">{{ dateBirth }} {{ yearsOld }}</div>
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Пол:</span>
             </div>
-            <div class="p-col-6">Женский</div>
+            <div class="p-col-6">{{ gender }}</div>
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> СНИЛС:</span>
             </div>
@@ -42,27 +42,27 @@
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Паспорт:</span>
             </div>
-            <div class="p-col-6">{{ fullPassport}}</div>
+            <div class="p-col-6">{{ fullPassport }}</div>
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Выдан:</span>
             </div>
             <div class="p-col-6">{{ card.FmsDepartment }}</div>
         </div>
-        <div id="insurance-data" class="p-grid p-mb-1 p-mt-1 tablet-segment" v-show="insuranceVisible">
+        <div id="insurance-data" class="p-grid p-mb-1 p-mt-1 tablet-segment" v-show="birthCertificateVisible">
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Свидетельство:</span>
             </div>
-            <div class="p-col-6">II-АГ 262314</div>
+            <div class="p-col-6">{{ fullBirthCertificate }}</div>
             <div class="p-col-6">
                 <span class="p-text-bold pi pi-chevron-circle-right"> Выдан:</span>
             </div>
-            <div class="p-col-6">Отделом ЗАГС Приморского края в Чугуевском районе</div>
+            <div class="p-col-6">{{ card.RegistryOffice }}</div>
         </div>
     </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Avatar from 'primevue/components/avatar/Avatar'
 export default {
@@ -70,27 +70,39 @@ export default {
   components: { Avatar },
   setup () {
     const store = useStore()
-    const passportVisible = ref(true)
+    const fullPassport = computed(() => (card.value.PassportSerial + ' ' + card.value.PassportNumber))
+    const passportVisible = computed(() => {
+      if (card.value.PassportSerial) return true
+      else return false
+    })
+    const fullBirthCertificate = computed(() => (card.value.BirthCertificateSerial + ' ' + card.value.BirthCertificateNumber))
+    const birthCertificateVisible = computed(() => {
+      if (card.value.BirthCertificateSerial) return true
+      else return false
+    })
     const card = computed(() => store.state.card.patientCard)
     const fullName = computed(() => (card.value.Surname + ' ' + card.value.FirstName + ' ' + card.value.SecondName))
-    const fullPassport = computed(() => (card.value.PassportSerial + ' ' + card.value.PassportNumber))
-    const dateBirth = new Date()// Date(card.value.DateBirth).toDateString()
-    // const currentDate = new Date()
-    // const _MS_PER_DAY = 1000 * 60 * 60 * 24
-    // const dateDiffInDays = (a, b) => {
-    // Discard the time and time-zone information.
-    // const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDay())
-    // const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())
-    // return Math.floor((utc2 - utc1) / _MS_PER_DAY)
-    // }
-    const yo = 1// dateDiffInDays(currentDate, dateBirth)
+    const dateBirth = computed(() => new Date(card.value.DateBirth).toLocaleDateString())
+    const yearsOld = computed(() => {
+      const date1 = new Date(new Date(card.value.DateBirth))
+      const date2 = new Date(new Date())
+      const years = date2.getFullYear() - date1.getFullYear()
+      return '(' + years + ' лет)'
+    })
+    const gender = computed(() => {
+      if (card.value.Gender === '1') return 'Мужской'
+      else return 'Женский'
+    })
     return {
+      fullPassport,
       passportVisible,
+      fullBirthCertificate,
+      birthCertificateVisible,
       card,
       fullName,
-      fullPassport,
       dateBirth,
-      yo
+      yearsOld,
+      gender
     }
   }
 }

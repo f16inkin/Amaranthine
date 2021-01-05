@@ -71,8 +71,13 @@
             <div class="p-col-4">
                 <div class="p-mb-2">
                     <label class="p-text-bold">Пол<i style="color:red">*</i></label>
+                    <div class="p-inputgroup p-mt-2">
+                        <RadioButton id="male" class="p-mr-1" name="male" value="1" v-model="card.Gender" />
+                        <label for="male" class="p-mr-3">мужской</label>
+                        <RadioButton id="female" class="p-mr-1" name="female" value="2" v-model="card.Gender" />
+                        <label for="female">женский</label>
+                    </div>
                 </div>
-
             </div>
         </div>
         <div class="p-grid" v-show="!onEdit">
@@ -111,7 +116,10 @@
             </div>
             <div class="p-col-4">
                 <div class="p-mb-2">
-                    <label class="p-text-bold">Пол<i style="color:red">*</i></label>
+                    <label class="p-text-bold">Пол</label>
+                    <div class="p-inputgroup p-mt-2">
+                        <span class="gender">{{ gender }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,15 +136,20 @@ export default {
     const onEdit = ref(false)
     const card = computed(() => store.state.card.patientCard)
     const fullName = computed(() => (card.value.Surname + ' ' + card.value.FirstName + ' ' + card.value.SecondName))
+    const gender = computed(() => {
+      if (card.value.Gender === '1') return 'Мужской'
+      else return 'Женский'
+    })
     const changeEditMode = () => {
       onEdit.value = !onEdit.value
-      console.log(store.state.card.patientCard)
+      console.log(card.value)
     }
     return {
       card,
       changeEditMode,
       onEdit,
-      fullName
+      fullName,
+      gender
       // card: computed(() => store.state.card.patientCard),
       // fullName: computed(() => (card.value.Surname + ' ' + card.value.FirstName))
     }
@@ -145,5 +158,11 @@ export default {
 </script>
 
 <style >
-
+    .gender {
+        border: solid 1px;
+        padding: 0.25rem;
+        border-radius: 5px;
+        background: #fdeec8;
+        opacity: 0.65;
+    }
 </style>
