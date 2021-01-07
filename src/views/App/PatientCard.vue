@@ -1,24 +1,7 @@
 <template>
     <div>
-        <div class="card-search-panel">
-            <Toolbar class="p-p-1">
-               <template #left>
-                   <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
-                   <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
-                   <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="getCardAction()" />
-                   <SplitButton  icon="pi pi-print" class="p-button-secondary" :model="items"></SplitButton>
-               </template>
-               <template #right>
-                   <div class="p-inputgroup">
-                       <InputText class="p-inputtext" placeholder="ФИО, СНИЛС или номер полиса" style="width: 300px;"/>
-                       <Button icon="pi pi-search" class="p-button-warning" @click="changeView()"/>
-                   </div>
-               </template>
-            </Toolbar>
-        </div>
-        <div>
-            <component :is="currentView"></component>
-        </div>
+        <div class="card-search-panel"><Search/></div>
+        <div><component :is="currentView"></component> </div>
     </div>
 </template>
 
@@ -30,9 +13,10 @@ import Cards from '../../components/App/PatientCard/Cards'
 import Button from 'primevue/components/button/Button'
 import InputText from 'primevue/components/inputtext/InputText'
 import SplitButton from 'primevue/components/splitbutton/SplitButton'
+import Search from "../../components/App/PatientCard/Search";
 export default {
   name: 'PatientCard',
-  components: { SplitButton, InputText, Button, Card, Cards },
+  components: {Search, SplitButton, InputText, Button, Card, Cards },
   setup () {
     const store = useStore()
     const items = [

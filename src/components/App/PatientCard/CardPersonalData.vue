@@ -4,10 +4,10 @@
             <i class="pi pi-user p-text-bold" style="color: #15cc15"><span class="p-text-bold" style="color: black"> Персональные данные</span></i>
         </template>
         <template #icons>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="!onEdit" v-tooltip.top="'Редактировать'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="editCard" v-show="!onEdit" v-tooltip.top="'Редактировать'">
                 <span class="pi pi-pencil"></span>
             </button>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="onEdit" v-tooltip.top="'Сохранить'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="saveCard" v-show="onEdit" v-tooltip.top="'Сохранить'">
                 <span class="pi pi-save"></span>
             </button>
         </template>
@@ -72,9 +72,9 @@
                 <div class="p-mb-2">
                     <label class="p-text-bold">Пол<i style="color:red">*</i></label>
                     <div class="p-inputgroup p-mt-2">
-                        <RadioButton id="male" class="p-mr-1" name="male" value="1" v-model="card.Gender" />
+                        <RadioButton id="male" class="p-mr-1" name="male" :value="genders.male" v-model="card.Gender" />
                         <label for="male" class="p-mr-3">мужской</label>
-                        <RadioButton id="female" class="p-mr-1" name="female" value="2" v-model="card.Gender" />
+                        <RadioButton id="female" class="p-mr-1" name="female" :value="genders.female" v-model="card.Gender" />
                         <label for="female">женский</label>
                     </div>
                 </div>
@@ -137,19 +137,25 @@ export default {
     const card = computed(() => store.state.card.patientCard)
     const fullName = computed(() => (card.value.Surname + ' ' + card.value.FirstName + ' ' + card.value.SecondName))
     const gender = computed(() => {
-      if (card.value.Gender === '1') return 'Мужской'
+      if (card.value.Gender === 1) return 'Мужской'
       else return 'Женский'
     })
-    const changeEditMode = () => {
-      onEdit.value = !onEdit.value
-      console.log(card.value)
-    }
+    const genders = {male: 1, female: 2}
+      const editCard = () => {
+          onEdit.value = !onEdit.value
+      }
+      const saveCard = () => {
+          store.dispatch('card/updateCardAction', card.CardId)
+          onEdit.value = !onEdit.value
+      }
     return {
       card,
-      changeEditMode,
       onEdit,
       fullName,
-      gender
+      gender,
+      genders,
+      editCard,
+      saveCard
       // card: computed(() => store.state.card.patientCard),
       // fullName: computed(() => (card.value.Surname + ' ' + card.value.FirstName))
     }

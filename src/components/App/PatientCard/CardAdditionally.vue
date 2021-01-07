@@ -6,10 +6,10 @@
             </div>
         </template>
         <template #icons>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="!onEdit" v-tooltip.top="'Редактировать'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="editCard" v-show="!onEdit" v-tooltip.top="'Редактировать'">
                 <span class="pi pi-pencil"></span>
             </button>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="changeEditMode" v-show="onEdit" v-tooltip.top="'Сохранить'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="saveCard" v-show="onEdit" v-tooltip.top="'Сохранить'">
                 <span class="pi pi-save"></span>
             </button>
         </template>
@@ -79,14 +79,19 @@ export default {
     const onEdit = ref(false)
     const card = computed(() => store.state.card.patientCard)
     const workplace = computed(() => card.value.Workplace + ', ' + card.value.Profession)
-    const changeEditMode = () => {
-      onEdit.value = !onEdit.value
-    }
+      const editCard = () => {
+          onEdit.value = !onEdit.value
+      }
+      const saveCard = () => {
+          store.dispatch('card/updateCardAction', card.CardId)
+          onEdit.value = !onEdit.value
+      }
     return {
       card,
       onEdit,
-      changeEditMode,
-      workplace
+      workplace,
+      editCard,
+      saveCard
     }
   }
 

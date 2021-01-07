@@ -90,7 +90,7 @@ export default {
       return '(' + years + ' лет)'
     })
     const gender = computed(() => {
-      if (card.value.Gender === '1') return 'Мужской'
+      if (card.value.Gender === 1) return 'Мужской'
       else return 'Женский'
     })
     return {

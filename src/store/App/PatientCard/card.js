@@ -37,6 +37,14 @@ const state = {
     Workplace: null,
     Profession: null,
     Notation: null
+  },
+  patientCards: [],
+  insuranceCompanies: [],
+  dispositions: {
+    regions: [],
+    districts: [],
+    localities: [],
+    streets: []
   }
 }
 

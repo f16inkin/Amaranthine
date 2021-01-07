@@ -5,7 +5,119 @@
                 <i class="pi pi-id-card p-text-bold" style="color: #15cc15"></i><span class="p-text-bold"> Документы</span>
             </div>
         </template>
-        <TabView>
+        <template #icons>
+            <button class="p-panel-header-icon p-link p-mr-2" @click="editCard" v-show="!onEdit" v-tooltip.top="'Редактировать'">
+                <span class="pi pi-pencil"></span>
+            </button>
+            <button class="p-panel-header-icon p-link p-mr-2" @click="saveCard" v-show="onEdit" v-tooltip.top="'Сохранить'">
+                <span class="pi pi-save"></span>
+            </button>
+        </template>
+        <TabView v-show="!onEdit">
+            <TabPanel>
+                    <template #header>
+                        <span style="color: blue;">СНИЛС, ЕНП</span>
+                    </template>
+                    <div class="p-mb-2">
+                        <label class="p-text-bold">СНИЛС:<i style="color:red">*</i></label>
+                    </div>
+                    <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                        <InputText v-model="card.InsuranceCertificate" disabled/>
+                    </div>
+                    <div class="p-mb-2">
+                        <label class="p-text-bold">Единый номер полиса:<i style="color:red">*</i></label>
+                    </div>
+                    <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                        <InputText v-model="card.PolicyNumber" disabled/>
+                    </div>
+                    <div class="p-mb-2">
+                        <label class="p-text-bold">Страховая компания:</label>
+                    </div>
+                    <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                        <InputText type="text" class="p-inputtext-sm" v-model="card.InsuranceCompanyName" disabled/>
+                    </div>
+                </TabPanel>
+            <TabPanel>
+                    <template #header>
+                        <span style="color: red;">Паспортные данные</span>
+                    </template>
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Серия, номер паспорта:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-id-card"></i>
+                    </span>
+                                <InputText type="text" class="p-inputtext-sm" v-model="fullPassport" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Дата выдачи:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                                <InputText type="date" class="p-inputtext-sm" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-12">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Кем выдан:</label>
+                            </div>
+                            <Textarea  v-model="card.FmsDepartment" :autoResize="true" rows="1" cols="30" disabled/>
+                        </div>
+                    </div>
+                </TabPanel>
+            <TabPanel>
+                    <template #header>
+                        <span style="color: orange;">Свидетельство о рождении</span>
+                    </template>
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Серия, номер свидетельства:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-id-card"></i>
+                    </span>
+                                <InputText type="text" class="p-inputtext-sm" v-model="fullBirthCertificate" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Дата выдачи:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                    <i class="pi pi-id-card"></i>
+                    </span>
+                                <InputText type="date" class="p-inputtext-sm" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-12">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Кем выдано:</label>
+                            </div>
+                            <Textarea v-model="card.RegistryOffice" :autoResize="true" rows="1" cols="30" disabled/>
+                        </div>
+                    </div>
+                </TabPanel>
+        </TabView>
+        <TabView v-show="onEdit">
             <TabPanel>
                 <template #header>
                     <span style="color: blue;">СНИЛС, ЕНП</span>
@@ -17,7 +129,7 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                    <InputMask id="insuranceCertificate" mask="999-999-999 99" v-model="insuranceCertificate" placeholder="***-***-*** **"/>
+                    <InputMask id="insuranceCertificate" mask="999-999-999 99" v-model="card.InsuranceCertificate" placeholder="***-***-*** **"/>
                 </div>
                 <div class="p-mb-2">
                     <label for="policyNumber" class="p-text-bold">Единый номер полиса:<i style="color:red">*</i></label>
@@ -26,7 +138,7 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                    <InputMask id="policyNumber" mask="9999-9999-9999-9999" v-model="policyNumber" placeholder="****-****-****-****"/>
+                    <InputMask id="policyNumber" mask="9999-9999-9999-9999" v-model="card.PolicyNumber" placeholder="****-****-****-****"/>
                 </div>
                 <div class="p-mb-2">
                     <label for="insuranceCompany" class="p-text-bold">Страховая компания:</label>
@@ -35,7 +147,7 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                    <InputText id="insuranceCompany" type="text" class="p-inputtext-sm" placeholder="Введите название страховой компании"/>
+                    <InputText id="insuranceCompany" type="text" class="p-inputtext-sm" v-model="card.InsuranceCompanyName" placeholder="Введите название страховой компании"/>
                 </div>
             </TabPanel>
             <TabPanel>
@@ -51,7 +163,7 @@
                     <span class="p-inputgroup-addon">
                     <i class="pi pi-id-card"></i>
                     </span>
-                            <InputMask id="passport" mask="9999-999999" v-model="passport" placeholder="****-******"/>
+                            <InputMask id="passport" mask="9999-999999" v-model="fullPassport" placeholder="****-******"/>
                         </div>
                     </div>
                     <div class="p-col-6">
@@ -69,7 +181,7 @@
                         <div class="p-mb-2">
                             <label  for="fms-department" class="p-text-bold">Кем выдан:</label>
                         </div>
-                        <Textarea id="fms-department" v-model="fmsDepartment" :autoResize="true" rows="1" cols="30" placeholder="Отдел УФМС"/>
+                        <Textarea id="fms-department" v-model="card.FmsDepartment" :autoResize="true" rows="1" cols="30" placeholder="Отдел УФМС"/>
                     </div>
                 </div>
             </TabPanel>
@@ -113,6 +225,8 @@
 </template>
 
 <script>
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import Panel from 'primevue/components/panel/Panel'
 import TabView from 'primevue/components/tabview/TabView'
 import TabPanel from 'primevue/components/tabpanel/TabPanel'
@@ -121,7 +235,29 @@ import InputMask from 'primevue/components/inputmask/InputMask'
 import InputText from 'primevue/components/inputtext/InputText'
 export default {
   name: 'CardDocuments',
-  components: { InputText, InputMask, Textarea, TabPanel, TabView, Panel }
+  components: { InputText, InputMask, Textarea, TabPanel, TabView, Panel },
+  setup () {
+    const store = useStore()
+    const onEdit = ref(false)
+    const card = computed(() => store.state.card.patientCard)
+    const fullPassport = computed(() => card.value.PassportSerial + ' ' + card.value.PassportNumber)
+    const fullBirthCertificate = computed(() => card.value.BirthCertificateSerial + ' ' + card.value.BirthCertificateNumber)
+      const editCard = () => {
+          onEdit.value = !onEdit.value
+      }
+      const saveCard = () => {
+          store.dispatch('card/updateCardAction', card.CardId)
+          onEdit.value = !onEdit.value
+      }
+    return {
+      card,
+      onEdit,
+      fullPassport,
+      fullBirthCertificate,
+      editCard,
+      saveCard
+    }
+  }
 }
 </script>
 
