@@ -41,13 +41,13 @@
                     <span class="p-inputgroup-addon">
                     <i class="pi pi-home"></i>
                     </span>
-                    <InputText id="district" type="text" class="p-inputtext-sm" v-model="card.DistrictName" @keyup="getDisposition(card.DistrictName, 'districts')" />
+                    <InputText id="district" type="text" class="p-inputtext-sm" v-model="card.DistrictName" @keyup="getDisposition(card.DistrictName, 'districts')"/>
                 </div>
                 <div class="search-result-area" v-if="dispositions.districts.length">
                     <div class="search-result-container">
-                        <div  v-for="district in dispositions.districts" :key="district.id" class="patient-card-search-result-line"  >
-                            <div hidden>{{district.id}}</div>
-                            <div class="search-result">{{district.district_name}}</div>
+                        <div  v-for="district in dispositions.districts" :key="district.id" class="patient-card-search-result-line" @click="setDisposition(district)">
+                            <div hidden>{{district.DistrictId}}</div>
+                            <div class="search-result">{{district.DistrictName}}</div>
                         </div>
                     </div>
                 </div>
@@ -64,9 +64,9 @@
                 </div>
                 <div class="search-result-area" v-if="dispositions.localities.length">
                     <div class="search-result-container">
-                        <div  v-for="locality in dispositions.localities" :key="locality.id" class="patient-card-search-result-line"  >
-                            <div hidden>{{locality.id}}</div>
-                            <div class="search-result">{{locality.locality_name}}</div>
+                        <div  v-for="locality in dispositions.localities" :key="locality.id" class="patient-card-search-result-line" @click="setDisposition(locality)">
+                            <div hidden>{{locality.LocalityId}}</div>
+                            <div class="search-result">{{locality.LocalityName}}</div>
                         </div>
                     </div>
                 </div>
@@ -83,9 +83,9 @@
                 </div>
                 <div class="search-result-area" v-if="dispositions.streets.length">
                     <div class="search-result-container">
-                        <div  v-for="street in dispositions.streets" :key="street.id" class="patient-card-search-result-line"  >
-                            <div hidden>{{street.id}}</div>
-                            <div class="search-result">{{street.street_name}}</div>
+                        <div  v-for="street in dispositions.streets" :key="street.id" class="patient-card-search-result-line" @click="setDisposition(street)">
+                            <div hidden>{{street.StreetId}}</div>
+                            <div class="search-result">{{street.StreetName}}</div>
                         </div>
                     </div>
                 </div>

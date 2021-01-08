@@ -70,14 +70,14 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                                <InputText type="date" class="p-inputtext-sm" disabled/>
+                                <InputText type="date" class="p-inputtext-sm" v-model="card.PassportDateOfIssue" disabled/>
                             </div>
                         </div>
                         <div class="p-col-12">
                             <div class="p-mb-2">
                                 <label class="p-text-bold">Кем выдан:</label>
                             </div>
-                            <Textarea  v-model="card.FmsDepartment" :autoResize="true" rows="1" cols="30" disabled/>
+                            <Textarea  v-model="card.FmsDepartment" class="p-inputtext-sm" :autoResize="true" rows="1" cols="30" disabled/>
                         </div>
                     </div>
                 </TabPanel>
@@ -91,7 +91,7 @@
                                 <label class="p-text-bold">Серия, номер свидетельства:</label>
                             </div>
                             <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
+                                <span class="p-inputgroup-addon">
                     <i class="pi pi-id-card"></i>
                     </span>
                                 <InputText type="text" class="p-inputtext-sm" v-model="fullBirthCertificate" disabled/>
@@ -102,17 +102,17 @@
                                 <label class="p-text-bold">Дата выдачи:</label>
                             </div>
                             <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
+                                <span class="p-inputgroup-addon">
                     <i class="pi pi-id-card"></i>
                     </span>
-                                <InputText type="date" class="p-inputtext-sm" disabled/>
+                                <InputText type="date" class="p-inputtext-sm" v-model="card.BirthCertificateDateOfIssue" disabled/>
                             </div>
                         </div>
                         <div class="p-col-12">
                             <div class="p-mb-2">
                                 <label class="p-text-bold">Кем выдано:</label>
                             </div>
-                            <Textarea v-model="card.RegistryOffice" :autoResize="true" rows="1" cols="30" disabled/>
+                            <Textarea v-model="card.RegistryOffice" class="p-inputtext-sm" :autoResize="true" rows="1" cols="30" disabled/>
                         </div>
                     </div>
                 </TabPanel>
@@ -155,18 +155,29 @@
                     <span style="color: red;">Паспортные данные</span>
                 </template>
                 <div class="p-grid">
-                    <div class="p-col-6">
+                    <div class="p-col-4">
                         <div class="p-mb-2">
-                            <label for="passport" class="p-text-bold">Серия, номер паспорта:</label>
+                            <label for="passport-serial" class="p-text-bold">Серия паспорта:</label>
                         </div>
                         <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
-                    <i class="pi pi-id-card"></i>
-                    </span>
-                            <InputMask id="passport" mask="9999-999999" v-model="fullPassport" placeholder="****-******"/>
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                            <InputMask id="passport-serial" mask="9999" v-model="card.PassportSerial" placeholder="****"/>
                         </div>
                     </div>
-                    <div class="p-col-6">
+                    <div class="p-col-4">
+                        <div class="p-mb-2">
+                            <label for="passport-number" class="p-text-bold">Номер паспорта:</label>
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                            <InputMask id="passport-number" mask="999999" v-model="card.PassportNumber" placeholder="******"/>
+                        </div>
+                    </div>
+                    <div class="p-col-4">
                         <div class="p-mb-2">
                             <label for="passport-date" class="p-text-bold">Дата выдачи:</label>
                         </div>
@@ -174,7 +185,7 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                            <InputText id="passport-date" type="date" class="p-inputtext-sm" placeholder="*****-******"/>
+                            <InputText id="passport-date" type="date" class="p-inputtext-sm" v-model="card.PassportDateOfIssue"/>
                         </div>
                     </div>
                     <div class="p-col-12">
@@ -190,26 +201,37 @@
                     <span style="color: orange;">Свидетельство о рождении</span>
                 </template>
                 <div class="p-grid">
-                    <div class="p-col-6">
+                    <div class="p-col-4">
                         <div class="p-mb-2">
-                            <label for="birth-certificate" class="p-text-bold">Серия, номер свидетельства:</label>
+                            <label for="birth-certificate-serial" class="p-text-bold">Серия свидетельства:</label>
                         </div>
                         <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
-                    <i class="pi pi-id-card"></i>
-                    </span>
-                            <InputText id="birth-certificate" type="text" class="p-inputtext-sm" placeholder="****-******"/>
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                            <InputText id="birth-certificate-serial" type="text" class="p-inputtext-sm" v-model="card.BirthCertificateSerial" placeholder="*****"/>
                         </div>
                     </div>
-                    <div class="p-col-6">
+                    <div class="p-col-4">
+                        <div class="p-mb-2">
+                            <label for="birth-certificate-number" class="p-text-bold">Номер свидетельства:</label>
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                            <InputText id="birth-certificate-number" type="text" class="p-inputtext-sm" v-model="card.BirthCertificateNumber" placeholder="*****"/>
+                        </div>
+                    </div>
+                    <div class="p-col-4">
                         <div class="p-mb-2">
                             <label for="birth-certificate-date" class="p-text-bold">Дата выдачи:</label>
                         </div>
                         <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">
+                            <span class="p-inputgroup-addon">
                     <i class="pi pi-id-card"></i>
                     </span>
-                            <InputText id="birth-certificate-date" type="date" class="p-inputtext-sm"/>
+                            <InputText id="birth-certificate-date" type="date" class="p-inputtext-sm" v-model="card.BirthCertificateDateOfIssue"/>
                         </div>
                     </div>
                     <div class="p-col-12">

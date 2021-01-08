@@ -11,7 +11,6 @@ import Panel from 'primevue/panel'
 import Fieldset from 'primevue/fieldset'
 import Toolbar from 'primevue/toolbar'
 import Sidebar from 'primevue/sidebar'
-import Avatar from 'primevue/avatar'
 import Card from 'primevue/card'
 import Menu from 'primevue/menu'
 import PanelMenu from 'primevue/panelmenu'
@@ -19,6 +18,7 @@ import Divider from 'primevue/divider'
 import RadioButton from 'primevue/radiobutton'
 import Tooltip from 'primevue/tooltip'
 import BadgeDirective from 'primevue/badgedirective'
+import Avatar from 'primevue/avatar'
 
 import 'primevue/resources/themes/bootstrap4-light-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
@@ -35,12 +35,12 @@ app.component('Panel', Panel)
 app.component('Fieldset', Fieldset)
 app.component('Toolbar', Toolbar)
 app.component('Sidebar', Sidebar)
-app.component('Avatar', Avatar)
 app.component('Card1', Card)
 app.component('Menu', Menu)
 app.component('PanelMenu', PanelMenu)
 app.component('Divider', Divider)
 app.component('RadioButton', RadioButton)
+app.component('Avatar', Avatar)
 app.directive('tooltip', Tooltip)
 app.directive('badge', BadgeDirective)
 app.mount('#app')

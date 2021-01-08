@@ -28,7 +28,10 @@ export const getCardsAction = ({ commit }, payload) => {
 }
 
 export const updateCardAction = ( { commit, state}, id) => {
-  return axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(state.patientCard))
+  // Переопределение типов.
+  let card = state.patientCard
+  card.CardNumber = parseInt(card.CardNumber)
+  return axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card))
       .then(function (response) {
         return response.data.card_data
       })//.then(data => {

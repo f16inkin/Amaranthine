@@ -10,29 +10,16 @@
             <div class="p-col-9">
                 <div class="card">
                     <div class="p-grid p-fluid">
-                        <div class="p-col-12">
-                            <span class="p-buttonset">
-                                <Button label="Карта" icon="pi pi-check" class="p-button-secondary p-button-outlined " />
-                                <Button label="Флюорография" icon="pi pi-trash" />
-                                <Button label="Прививки" icon="pi pi-times" />
-                            </span>
+                        <div class="p-col">
+                            <SelectButton v-model="currentSection" :options="sections" dataKey="value">
+                                <template #option="slotProps">
+                                    <i :class="slotProps.option.icon">{{ slotProps.option.name }}</i>
+                                </template>
+                            </SelectButton>
                         </div>
-                        <div class="p-col-6">
-                            <div class="p-mb-2">
-                                <CardPersonalData/>
-                            </div>
-                            <div class="p-mb-2">
-                                <CardDocuments/>
-                            </div>
-                        </div>
-                        <div class="p-col-6">
-                            <div class="p-mb-2">
-                                <CardAdditionally/>
-                            </div>
-                            <div class="p-mb-2">
-                                <CardAddresses></CardAddresses>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="p-grid p-fluid">
+                        <component :is="currentSection.value"/>
                     </div>
                 </div>
             </div>
@@ -42,38 +29,36 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import CardPersonalData from './CardPersonalData'
-import CardDocuments from './CardDocuments'
-import CardAddresses from './CardAddresses'
-import CardAdditionally from './CardAdditionally'
 import CardTablet from './CardTablet'
+import SelectButton from 'primevue/components/selectbutton/SelectButton'
+import CardMain from './CardMain'
+import CardFluorography from './CardFluorography'
+import CardVaccinations from './CardVaccinations'
 export default {
   name: 'Card',
-  components: { CardTablet, CardAdditionally, CardAddresses, CardDocuments, CardPersonalData },
+  components: { CardVaccinations, CardFluorography, CardMain, SelectButton, CardTablet },
   setup () {
     const store = useStore()
     const route = useRoute()
+    const sections = [
+        {name: 'Карта', icon: '', value: 'CardMain'},
+        {name: 'Флюорография', icon: '', value: 'CardFluorography'},
+        {name: 'Прививки', icon: '', value: 'CardVaccinations'},
+    ]
+    const currentSection = ref(sections[0])
     store.dispatch('card/getCardAction', route.params.id)
+    return {
+        sections,
+        currentSection
+    }
   }
 }
 </script>
 
 <style>
-    .card-body{
-        min-height: calc(100vh - 250px);
-        width: 100%;
-        padding: 1rem;
-    }
-    .card{
-        background: var(--surface-e);
-        padding: 0.5rem;
-        -webkit-box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-        border-radius: 4px;
-        margin-bottom: 2rem;
-    }
     .p-panel .p-panel-header{
         padding: 0.2rem;
     }

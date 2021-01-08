@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="card-search-panel"><Search/></div>
-        <div><component :is="currentView"></component> </div>
+        <div><component :is="currentView"/></div>
     </div>
 </template>
 
@@ -10,38 +10,31 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Card from '../../components/App/PatientCard/Card'
 import Cards from '../../components/App/PatientCard/Cards'
-import Button from 'primevue/components/button/Button'
-import InputText from 'primevue/components/inputtext/InputText'
-import SplitButton from 'primevue/components/splitbutton/SplitButton'
 import Search from "../../components/App/PatientCard/Search";
 export default {
   name: 'PatientCard',
-  components: {Search, SplitButton, InputText, Button, Card, Cards },
+  components: { Search, Card, Cards },
   setup () {
     const store = useStore()
-    const items = [
-      {
-        label: 'Амбулаторный',
-        icon: 'pi pi-print',
-        command: () => {
-          this.$toast.add({ severity: 'success', summary: 'Updated', detail: 'Data Updated', life: 3000 })
-        }
-      },
-      {
-        label: 'Гинекологический',
-        icon: 'pi pi-print',
-        command: () => {
-          this.$toast.add({ severity: 'warn', summary: 'Delete', detail: 'Data Deleted', life: 3000 })
-        }
-      }
-    ]
     return {
-      changeView: () => store.dispatch('card/changeView'),
       currentView: computed(() => store.state.card.currentView),
-      items
     }
   }
 }
 </script>
 
-<style></style>
+<style>
+    .card-body{
+        min-height: calc(100vh - 250px);
+        width: 100%;
+        padding: 1rem;
+    }
+    .card{
+        background: var(--surface-e);
+        padding: 0.5rem;
+        -webkit-box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+    }
+</style>

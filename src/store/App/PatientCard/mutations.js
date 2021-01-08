@@ -1,12 +1,3 @@
-export const increment = state => {
-  state.count++
-  state.history.push('increment')
-}
-
-export const changeView = state => {
-  state.currentView = 'Cards'
-}
-
 export const GET_CARD = (state, card) => {
   Object.keys(card).forEach(function (k) {
     card[k] = card[k] ? card[k] : ''
@@ -17,7 +8,7 @@ export const GET_CARD = (state, card) => {
 
 export const GET_CARDS = (state, cards) => {
   state.patientCards = cards;
-  state.currentView = 'Cards';
+  //state.currentView = 'Cards';
   console.log(cards)
 }
 
@@ -26,8 +17,8 @@ export const GET_DISPOSITIONS = (state, payload) => {
 }
 
 export const SET_DISPOSITION =  (state, payload) => {
-  state.patientCard[Object.keys(payload)[0]] = payload.RegionId
-  state.patientCard[Object.keys(payload)[1]] = payload.RegionName
+  state.patientCard[Object.keys(payload)[0]] = payload[Object.keys(payload)[0]]
+  state.patientCard[Object.keys(payload)[1]] = payload[Object.keys(payload)[1]]
   state.dispositions.regions = [];
   state.dispositions.districts = [];
   state.dispositions.localities = [];
