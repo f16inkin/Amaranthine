@@ -10,14 +10,14 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 import Card from '../../components/App/PatientCard/Card'
 import Cards from '../../components/App/PatientCard/Cards'
-import Search from "../../components/App/PatientCard/Search";
+import Search from '../../components/App/PatientCard/Search'
 export default {
   name: 'PatientCard',
   components: { Search, Card, Cards },
   setup () {
     const store = useStore()
     return {
-      currentView: computed(() => store.state.card.currentView),
+      currentView: computed(() => store.state.card.currentView)
     }
   }
 }

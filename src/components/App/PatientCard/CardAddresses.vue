@@ -149,21 +149,21 @@ export default {
       onEdit.value = !onEdit.value
     }
     const saveCard = () => {
-        store.dispatch('card/updateCardAction', card.CardId)
-        onEdit.value = !onEdit.value
+      store.dispatch('card/updateCardAction', card.value.CardId)
+      onEdit.value = !onEdit.value
     }
     const getDisposition = (searchString, endpoint) => {
       if (searchString.length > 3) {
-          if (typingTimer !== null) {
-              clearTimeout(typingTimer)
-          }
-          typingTimer = setTimeout(() => {
-              store.dispatch('card/getDispositionsAction', { endpoint: endpoint, searchString: searchString, limit: 5 })
-          }, 500)
+        if (typingTimer !== null) {
+          clearTimeout(typingTimer)
+        }
+        typingTimer = setTimeout(() => {
+          store.dispatch('card/getDispositionsAction', { endpoint: endpoint, searchString: searchString, limit: 5 })
+        }, 500)
       }
     }
     const setDisposition = (payload) => {
-        store.dispatch('card/setDispositionAction', payload)
+      store.dispatch('card/setDispositionAction', payload)
     }
 
     return {
@@ -181,25 +181,5 @@ export default {
 </script>
 
 <style scoped>
-    .search-result-container{
-        width: 100%;
-        border: solid 1px;
-        border-color: #dce1e5;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-    }
-    .search-result-area {
-        width: 100%;
-    }
-    .search-result {
-        padding: 0.3rem;
-        border: solid 1px;
-        border-radius: 2px;
-        border-color: #e9ecef;
-        cursor: pointer
-    }
-    .search-result:hover{
-        background-color: #007bff;
-        color: white;
-    }
+
 </style>

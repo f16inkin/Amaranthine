@@ -18,14 +18,14 @@
 </template>
 
 <script>
-    import CardPersonalData from './CardPersonalData'
-    import CardDocuments from './CardDocuments'
-    import CardAddresses from './CardAddresses'
-    import CardAdditionally from './CardAdditionally'
-    export default {
-        name: "CardMain",
-        components: { CardAdditionally, CardAddresses, CardDocuments, CardPersonalData }
-    }
+import CardPersonalData from './CardPersonalData'
+import CardDocuments from './CardDocuments'
+import CardAddresses from './CardAddresses'
+import CardAdditionally from './CardAdditionally'
+export default {
+  name: 'CardMain',
+  components: { CardAdditionally, CardAddresses, CardDocuments, CardPersonalData }
+}
 </script>
 
 <style scoped>

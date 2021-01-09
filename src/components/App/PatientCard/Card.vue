@@ -44,15 +44,15 @@ export default {
     const store = useStore()
     const route = useRoute()
     const sections = [
-        {name: 'Карта', icon: '', value: 'CardMain'},
-        {name: 'Флюорография', icon: '', value: 'CardFluorography'},
-        {name: 'Прививки', icon: '', value: 'CardVaccinations'},
+      { name: 'Карта', icon: '', value: 'CardMain' },
+      { name: 'Флюорография', icon: '', value: 'CardFluorography' },
+      { name: 'Прививки', icon: '', value: 'CardVaccinations' }
     ]
     const currentSection = ref(sections[0])
     store.dispatch('card/getCardAction', route.params.id)
     return {
-        sections,
-        currentSection
+      sections,
+      currentSection
     }
   }
 }
@@ -61,5 +61,26 @@ export default {
 <style>
     .p-panel .p-panel-header{
         padding: 0.2rem;
+    }
+    .search-result-container{
+        width: 100%;
+        border: solid 1px;
+        border-color: #dce1e5;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+    .search-result-area {
+        width: 100%;
+    }
+    .search-result {
+        padding: 0.3rem;
+        border: solid 1px;
+        border-radius: 2px;
+        border-color: #e9ecef;
+        cursor: pointer
+    }
+    .search-result:hover{
+        background-color: #007bff;
+        color: white;
     }
 </style>

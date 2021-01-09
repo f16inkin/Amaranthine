@@ -140,14 +140,14 @@ export default {
       if (card.value.Gender === 1) return 'Мужской'
       else return 'Женский'
     })
-    const genders = {male: 1, female: 2}
-      const editCard = () => {
-          onEdit.value = !onEdit.value
-      }
-      const saveCard = () => {
-          store.dispatch('card/updateCardAction', card.CardId)
-          onEdit.value = !onEdit.value
-      }
+    const genders = { male: 1, female: 2 }
+    const editCard = () => {
+      onEdit.value = !onEdit.value
+    }
+    const saveCard = () => {
+      store.dispatch('card/updateCardAction', card.value.CardId)
+      onEdit.value = !onEdit.value
+    }
     return {
       card,
       onEdit,

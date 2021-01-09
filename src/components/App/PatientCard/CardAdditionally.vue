@@ -79,13 +79,13 @@ export default {
     const onEdit = ref(false)
     const card = computed(() => store.state.card.patientCard)
     const workplace = computed(() => card.value.Workplace + ', ' + card.value.Profession)
-      const editCard = () => {
-          onEdit.value = !onEdit.value
-      }
-      const saveCard = () => {
-          store.dispatch('card/updateCardAction', card.CardId)
-          onEdit.value = !onEdit.value
-      }
+    const editCard = () => {
+      onEdit.value = !onEdit.value
+    }
+    const saveCard = () => {
+      store.dispatch('card/updateCardAction', card.value.CardId)
+      onEdit.value = !onEdit.value
+    }
     return {
       card,
       onEdit,

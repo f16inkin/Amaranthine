@@ -147,7 +147,15 @@
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                    <InputText id="insuranceCompany" type="text" class="p-inputtext-sm" v-model="card.InsuranceCompanyName" placeholder="Введите название страховой компании"/>
+                    <InputText id="insuranceCompany" type="text" class="p-inputtext-sm" v-model="card.InsuranceCompanyName" @keyup="getInsuranceCompanies(card.InsuranceCompanyName)" placeholder="Введите название страховой компании"/>
+                </div>
+                <div class="search-result-area" v-if="insuranceCompanies.length">
+                    <div class="search-result-container">
+                        <div  v-for="company in insuranceCompanies" :key="company.id" class="patient-card-search-result-line" @click="setInsuranceCompany(company)">
+                            <div hidden>{{company.InsuranceCompanyId}}</div>
+                            <div class="search-result">{{company.InsuranceCompanyName}}</div>
+                        </div>
+                    </div>
                 </div>
             </TabPanel>
             <TabPanel>
@@ -238,7 +246,7 @@
                         <div class="p-mb-2">
                             <label  for="registry-office" class="p-text-bold">Кем выдано:</label>
                         </div>
-                        <Textarea id="registry-office" v-model="registryOffice" :autoResize="true" rows="1" cols="30" placeholder="Отдел ЗАГСа"/>
+                        <Textarea id="registry-office" v-model="card.RegistryOffice" :autoResize="true" rows="1" cols="30" placeholder="Отдел ЗАГСа"/>
                     </div>
                 </div>
             </TabPanel>
@@ -261,23 +269,41 @@ export default {
   setup () {
     const store = useStore()
     const onEdit = ref(false)
+    let typingTimer = 0
     const card = computed(() => store.state.card.patientCard)
+    const insuranceCompanies = computed(() => store.state.card.insuranceCompanies)
     const fullPassport = computed(() => card.value.PassportSerial + ' ' + card.value.PassportNumber)
     const fullBirthCertificate = computed(() => card.value.BirthCertificateSerial + ' ' + card.value.BirthCertificateNumber)
-      const editCard = () => {
-          onEdit.value = !onEdit.value
+    const editCard = () => {
+      onEdit.value = !onEdit.value
+    }
+    const saveCard = () => {
+      store.dispatch('card/updateCardAction', card.value.CardId)
+      onEdit.value = !onEdit.value
+    }
+    const getInsuranceCompanies = (searchString) => {
+      if (searchString.length > 3) {
+        if (typingTimer !== null) {
+          clearTimeout(typingTimer)
+        }
+        typingTimer = setTimeout(() => {
+          store.dispatch('card/getInsuranceCompaniesAction', { searchString: searchString, limit: 5 })
+        }, 500)
       }
-      const saveCard = () => {
-          store.dispatch('card/updateCardAction', card.CardId)
-          onEdit.value = !onEdit.value
-      }
+    }
+    const setInsuranceCompany = (payload) => {
+      store.dispatch('card/setInsuranceCompanyAction', payload)
+    }
     return {
       card,
+      insuranceCompanies,
       onEdit,
       fullPassport,
       fullBirthCertificate,
       editCard,
-      saveCard
+      saveCard,
+      getInsuranceCompanies,
+      setInsuranceCompany
     }
   }
 }

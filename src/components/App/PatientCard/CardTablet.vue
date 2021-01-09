@@ -100,10 +100,8 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import Avatar from 'primevue/components/avatar/Avatar'
 export default {
   name: 'CardTablet',
-  components: { Avatar },
   setup () {
     // СИСТЕМНОЕ ОКРУЖЕНИЕ
     const store = useStore()
@@ -135,9 +133,9 @@ export default {
       if (card.value.Gender === 1) return 'Мужской'
       else return 'Женский'
     })
-    const genderImage = computed (() => {
-        if (card.value.Gender === 1) return require('@/assets/patient-card/male-icon.png')
-        else return require('@/assets/patient-card/female-icon.png')
+    const genderImage = computed(() => {
+      if (card.value.Gender === 1) return require('@/assets/patient-card/male-icon.png')
+      else return require('@/assets/patient-card/female-icon.png')
     })
     return {
       fullPassport,

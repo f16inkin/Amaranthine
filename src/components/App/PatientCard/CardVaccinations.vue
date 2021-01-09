@@ -3,9 +3,9 @@
 </template>
 
 <script>
-    export default {
-        name: "CardVaccinations"
-    }
+export default {
+  name: 'CardVaccinations'
+}
 </script>
 
 <style scoped>

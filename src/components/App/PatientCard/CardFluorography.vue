@@ -3,9 +3,9 @@
 </template>
 
 <script>
-    export default {
-        name: "CardFluorography"
-    }
+export default {
+  name: 'CardFluorography'
+}
 </script>
 
 <style scoped>

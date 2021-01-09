@@ -15,36 +15,36 @@
 </template>
 
 <script>
-    import { ref } from 'vue'
-    import { useRoute } from 'vue-router'
-    import { useStore } from 'vuex'
-    import Button from 'primevue/components/button/Button'
-    import InputText from 'primevue/components/inputtext/InputText'
-    export default {
-        name: "Search",
-        components: {InputText, Button },
-        setup () {
-            const store = useStore()
-            const route = useRoute()
-            const getCards = () => {
-                store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
-                store.state.card.currentView = 'Cards' //Либо лучше закинуть в мутацию, как было, но я буду уверен что вид поменяется
-                // тогда когда будет уже сделан ajax запрос
-            }
-            const searchString = ref('')
-            const page = ref(1)
-            const offset = ref(5)
-            const printTalon = () => {
-                let talonPath = `http://192.168.0.6/api/v1/talons/${route.params.id}`;
-                window.open(talonPath, '_blank');
-            }
-            return {
-                searchString,
-                getCards,
-                printTalon
-            }
-        }
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import Button from 'primevue/components/button/Button'
+import InputText from 'primevue/components/inputtext/InputText'
+export default {
+  name: 'Search',
+  components: { InputText, Button },
+  setup () {
+    const store = useStore()
+    const route = useRoute()
+    const getCards = () => {
+      store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
+      store.state.card.currentView = 'Cards' // Либо лучше закинуть в мутацию, как было, но я буду уверен что вид поменяется
+      // тогда когда будет уже сделан ajax запрос
     }
+    const searchString = ref('')
+    const page = ref(1)
+    const offset = ref(5)
+    const printTalon = () => {
+      const talonPath = `http://192.168.0.6/api/v1/talons/${route.params.id}`
+      window.open(talonPath, '_blank')
+    }
+    return {
+      searchString,
+      getCards,
+      printTalon
+    }
+  }
+}
 </script>
 
 <style scoped>
