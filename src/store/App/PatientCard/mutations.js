@@ -1,3 +1,15 @@
+const formatInsuranceCertificate = (certificate) => {
+  const pattern = new RegExp(".{1," + 3 + "}", "g");
+  let insuranceCertificate = certificate.match(pattern)
+  return insuranceCertificate.splice(0, 3).join('-') + ' ' + insuranceCertificate
+}
+
+const formatPolicyNumber = (policy) => {
+  const pattern = new RegExp(".{1," + 4 + "}", "g");
+  let policyNumber = policy.match(pattern)
+  return policyNumber.join('-')
+}
+
 export const GET_CARD = (state, card) => {
   Object.keys(card).forEach(function (k) {
     card[k] = card[k] ? card[k] : ''
@@ -8,8 +20,11 @@ export const GET_CARD = (state, card) => {
 
 export const GET_CARDS = (state, cards) => {
   state.patientCards = cards
-  // state.currentView = 'Cards';
-  console.log(cards)
+  Object.keys(cards.Cards).forEach(function (k) {
+    cards.Cards[k]['insuranceCertificate'] = formatInsuranceCertificate(cards.Cards[k]['insuranceCertificate'])
+    cards.Cards[k]['policyNumber'] = formatPolicyNumber(cards.Cards[k]['policyNumber'])
+    cards.Cards[k]['fullName'] = cards.Cards[k]['surname'] + ' ' + cards.Cards[k]['firstName'] + ' ' + (cards.Cards[k]['secondName'] || '')
+  })
 }
 
 export const GET_DISPOSITIONS = (state, payload) => {

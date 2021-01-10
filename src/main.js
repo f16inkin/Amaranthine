@@ -9,7 +9,6 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Panel from 'primevue/panel'
 import Fieldset from 'primevue/fieldset'
-import Toolbar from 'primevue/toolbar'
 import Sidebar from 'primevue/sidebar'
 import Card from 'primevue/card'
 import Menu from 'primevue/menu'
@@ -33,7 +32,6 @@ app.component('InputText', InputText)
 app.component('Button', Button)
 app.component('Panel', Panel)
 app.component('Fieldset', Fieldset)
-app.component('Toolbar', Toolbar)
 app.component('Sidebar', Sidebar)
 app.component('Card1', Card)
 app.component('Menu', Menu)

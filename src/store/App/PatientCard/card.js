@@ -43,7 +43,11 @@ const state = {
     Notation: null,
     Owner: null
   },
-  patientCards: [],
+  patientCards: {
+    Cards:[],
+    PagesCounts: 0,
+    PageOrder: 'First'
+  },
   insuranceCompanies: [],
   dispositions: {
     regions: [],

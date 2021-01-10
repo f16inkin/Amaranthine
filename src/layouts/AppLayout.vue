@@ -4,7 +4,7 @@
             <AppUserBar></AppUserBar>
         </section>
         <section id="main_section">
-            <Sidebar v-model:visible="sideBarVisible" style="background-color: red"></Sidebar>
+            <Sidebar :visible="sideBarVisible" style="background-color: red"></Sidebar>
             <router-view/>
         </section>
         <section id="footer_section"></section>
