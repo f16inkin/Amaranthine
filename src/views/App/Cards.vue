@@ -58,7 +58,7 @@ export default {
     return {
       cards,
       cardsCount,
-        searchString,
+      searchString,
       getCards
     }
   }

@@ -53,24 +53,23 @@ import CardMain from '../../components/App/PatientCard/CardMain'
 import CardFluorography from '../../components/App/PatientCard/CardFluorography'
 import CardVaccinations from '../../components/App/PatientCard/CardVaccinations'
 import CardTablet from '../../components/App/PatientCard/CardTablet'
-import Search from '../../components/App/PatientCard/Search'
 import InputText from 'primevue/components/inputtext/InputText'
 import Button from 'primevue/components/button/Button'
 import Toolbar from 'primevue/components/toolbar/Toolbar'
 export default {
   name: 'Card',
-  components: {Toolbar, Button, InputText, Search, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
+  components: { Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
   setup () {
     const store = useStore()
     const route = useRoute()
     const router = useRouter()
-      const searchString = ref('')
-      const page = ref(1)
-      const offset = ref(5)
-      const getCards = () => {
-          store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
-          router.push({ name: 'getCards' })
-      }
+    const searchString = ref('')
+    const page = ref(1)
+    const offset = ref(5)
+    const getCards = () => {
+      store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
+      router.push({ name: 'getCards' })
+    }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
       { name: 'Флюорография', icon: '', value: 'CardFluorography' },
@@ -81,8 +80,8 @@ export default {
     return {
       sections,
       currentSection,
-        searchString,
-        getCards
+      searchString,
+      getCards
     }
   }
 }

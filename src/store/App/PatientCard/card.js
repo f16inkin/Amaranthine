@@ -44,7 +44,7 @@ const state = {
     Owner: null
   },
   patientCards: {
-    Cards:[],
+    Cards: [],
     PagesCounts: 0,
     PageOrder: 'First'
   },

@@ -25,22 +25,23 @@
 <script>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import DataTable from "primevue/components/datatable/DataTable";
-import Column from "primevue/components/column/Column";
-import Button from "primevue/components/button/Button";
+import DataTable from 'primevue/components/datatable/DataTable'
+import Column from 'primevue/components/column/Column'
+import Button from 'primevue/components/button/Button'
 export default {
   name: 'Desktop',
   components: { Button, Column, DataTable },
   setup () {
     const store = useStore()
     const loadData = () => {
-        store.dispatch('card/getCardsAction', { searchString: '', page: 1, offset: 5 })
+      store.dispatch('card/getCardsAction', { searchString: '', page: 1, offset: 5 })
     }
-      const cards = computed(() => store.state.card.patientCards.Cards)
+    const cards = computed(() => store.state.card.patientCards.Cards)
     return {
       count: computed(() => store.state.card.count),
       increment: () => store.dispatch('card/increment'),
-        loadData, cards
+      loadData,
+      cards
     }
   }
 }
