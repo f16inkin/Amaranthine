@@ -8,10 +8,16 @@ const routes = [
     meta: { title: 'Рабочий стол', layout: 'App' }
   },
   {
-    path: '/app/patient-card/get/:id',
+    path: '/app/patient-card/cards/:id',
     name: 'getCard',
-    component: () => import('../views/App/PatientCard'),
+    component: () => import('../views/App/Card'),
     meta: { title: 'Карта пациента', layout: 'App' }
+  },
+  {
+    path: '/app/patient-card/cards',
+    name: 'getCards',
+    component: () => import('../views/App/Cards'),
+    meta: { title: 'Поиск карт', layout: 'App' }
   },
   {
     path: '/admin',
