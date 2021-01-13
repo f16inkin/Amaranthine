@@ -1,13 +1,13 @@
 <template>
     <div id="application">
-        <section id="header_section">
+        <section id="header-section">
             <AppUserBar></AppUserBar>
         </section>
-        <section id="main_section">
+        <section id="main-section">
             <Sidebar :visible="sideBarVisible" style="background-color: red"></Sidebar>
             <router-view/>
         </section>
-        <section id="footer_section"></section>
+        <section id="footer-section"></section>
     </div>
 </template>
 
@@ -26,16 +26,16 @@ export default {
 </script>
 
 <style scoped>
-    #header_section{
+    #header-section{
         /*height: 64px;*/
         background-color: grey;
     }
-    #main_section{
+    #main-section{
         width: 100%;
         min-height: calc(100vh - 164px); /*Учитывая размер хидера, должен отнять*/
         background-color: white;
     }
-    #footer_section{
+    #footer-section{
         height: 100px;
         background-color: #0b2e13;
     }

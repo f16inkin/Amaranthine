@@ -1,5 +1,5 @@
 <template>
-    <div class="tablet">
+    <div class="tablet p-shadow-7">
         <div class="p-grid p-mb-1 p-mt-1 ">
             <div class="p-col" style=" text-align: center;">
                 <span class="p-text-bold" style="font-size: 20px;">Карта № {{ card.CardNumber }} <!-- Редактируется пользователем: Купчинская Л.В.--></span>
