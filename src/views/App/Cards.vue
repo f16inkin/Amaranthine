@@ -4,7 +4,7 @@
             <Toolbar class="p-p-1">
                 <template #right>
                     <div class="p-inputgroup">
-                        <InputText class="p-inputtext" placeholder="ФИО, СНИЛС или номер полиса" style="width: 300px;" v-model="searchString"/>
+                        <InputText class="p-inputtext" placeholder="ФИО, СНИЛС или номер полиса" style="width: 300px;" v-on:keypress.enter="getCards" v-model="searchString"/>
                         <Button icon="pi pi-search" class="p-button-warning" @click="getCards"/>
                     </div>
                 </template>
