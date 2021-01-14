@@ -68,7 +68,7 @@ export default {
     const offset = ref(5)
     const getCards = () => {
       store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
-      router.push({ name: 'getCards' })
+      router.push({ name: 'get.cards' })
     }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },

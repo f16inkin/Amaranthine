@@ -23,7 +23,7 @@
                 <Column field="policyNumber" header="Полис" headerStyle="width:20%; text-align:center;" bodyStyle="text-align: center"/>
                 <Column header="Управление"  bodyStyle="text-align: center">
                     <template #body="slotProps">
-                        <router-link tag="Button" :to="{name: 'getCard', params: {id: slotProps.data.cardId}}">
+                        <router-link tag="Button" :to="{name: 'get.card', params: {id: slotProps.data.cardId}}">
                             <Button icon="pi pi-pencil" class="p-button-rounded p-button p-mr-2"/>
                         </router-link>
                     </template>
