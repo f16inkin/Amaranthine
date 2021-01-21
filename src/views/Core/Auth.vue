@@ -5,15 +5,13 @@
                 <div class="app-title">
                     <h1>Авторизация в системе</h1>
                 </div>
-
                 <div class="login-form">
                     <div class="control-group">
                         <input type="text" class="login-field" v-model="userName" placeholder="Имя пользователя" id="login-name">
                         <label class="login-field-icon fui-user" for="login-name"></label>
                     </div>
-
                     <div class="control-group">
-                        <input type="password" class="login-field" v-model="userPassword" placeholder="Пароль" id="login-pass">
+                        <input type="password" class="login-field" v-model="userPassword" @keyup.enter="doAuth()" placeholder="Пароль" id="login-pass">
                         <label class="login-field-icon fui-lock" for="login-pass"></label>
                     </div>
                     <a class="btn btn-primary btn-large btn-block" @click="doAuth()">Войти</a>
@@ -24,18 +22,35 @@
 </template>
 
 <script>
+    import axios from 'axios'
     import { ref } from 'vue'
-    import { useStore } from 'vuex'
+    import { useRouter } from 'vue-router'
     import Button from "primevue/components/button/Button";
     export default {
         name: "Auth",
         components: {Button},
         setup () {
-            const store = useStore()
+            const apiUrl = 'http://192.168.0.6'
+            const router = useRouter()
             const userName = ref('')
             const userPassword = ref('')
-            const doAuth = () => {
-                store.dispatch('auth/doAuthAction', { userName: userName.value, userPassword: userPassword.value })
+            const doAuth = async() => {
+                try {
+                    let tokens = await axios.get(`${apiUrl}/api/v1/auth/doAuth`, { params: { UserName: userName.value, UserPassword: userPassword.value } })
+                    let accessToken = tokens.data.AccessToken
+                    let refreshToken = tokens.data.RefreshToken
+                    let payload = JSON.parse(atob(accessToken.split('.')[1]))
+                    sessionStorage.setItem('JWT', accessToken)
+                    sessionStorage.setItem('JWTExpTime', payload.exp)
+                    sessionStorage.setItem('AccountId', payload.accountId)
+                    //sessionStorage.setItem('UserName', payload.user.UserName)
+                    sessionStorage.setItem('AccountPermissions', payload.accountPermissions)
+                    sessionStorage.setItem('Talons', payload.talons)
+                    localStorage.setItem('RefreshToken', refreshToken)
+                    router.push({ name: 'app.desktop' })
+                }catch (e) {
+                    console.log(e.response)
+                }
             }
             return {
                 userName,
