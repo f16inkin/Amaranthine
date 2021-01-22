@@ -5,6 +5,7 @@
                 <template #left>
                     <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
                     <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
+                    <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon"/>
                 </template>
                 <template #right>
                     <div class="p-inputgroup">
@@ -45,6 +46,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -70,6 +72,10 @@ export default {
       store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
       router.push({ name: 'get.cards' })
     }
+    const printTalon = async() => {
+        let talon = 'ambulatory'
+        store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
+    }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
       { name: 'Флюорография', icon: '', value: 'CardFluorography' },
@@ -81,7 +87,8 @@ export default {
       sections,
       currentSection,
       searchString,
-      getCards
+      getCards,
+      printTalon
     }
   }
 }

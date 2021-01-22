@@ -169,3 +169,30 @@ export const getInsuranceCompaniesAction = async({ commit }, payload) => {
 export const setInsuranceCompanyAction = ({ commit }, payload) => {
   commit('SET_INSURANCE_COMPANY', payload)
 }
+
+export const getTalonAction = async ({ commit }, payload) => {
+    try {
+        let currentRefreshToken = localStorage.getItem('RefreshToken')
+        let accessTokenExpTime = sessionStorage.getItem('JWTExpTime');
+        let currentTime = Math.floor((Date.now() / 1000)+15)
+        if (accessTokenExpTime <= currentTime) {
+            let currentAccessToken = await doRefresh(currentRefreshToken)
+            let response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, {responseType: 'blob', headers: { Authorization: `Bearer ${currentAccessToken}` }})
+            let blob = new Blob([response.data], { type: 'application/pdf' })
+            let link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = 'Report.pdf'
+            window.open(link, '_blank')
+        }else {
+            let currentAccessToken = sessionStorage.getItem('JWT')
+            let response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, {responseType: 'blob', headers: { Authorization: `Bearer ${currentAccessToken}` }})
+            let blob = new Blob([response.data], { type: 'application/pdf' })
+            let link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = 'Report.pdf'
+            window.open(link, '_blank')
+        }
+    }catch (e) {
+        console.log(e.response)
+    }
+}
