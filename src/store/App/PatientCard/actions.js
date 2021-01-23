@@ -113,11 +113,20 @@ export const updateCardAction = async({ commit, state }, id) => {
         if (accessTokenExpTime <= currentTime){
             let currentAccessToken = await doRefresh(currentRefreshToken)
             let card = prepareDataForUpdate(state)
+            let cardId = {'cardId' : card.CardId}
             await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), {headers: { Authorization: `Bearer ${currentAccessToken}` } })
+            // Необходимо сделать разблокировку карты для других пользователей
+            await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), {headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
+            commit('UNBLOCK_CARD')
+
         }else{
             let card = prepareDataForUpdate(state)
+            let cardId = {'cardId' : card.CardId}
             let currentAccessToken = sessionStorage.getItem('JWT')
             await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), {headers: { Authorization: `Bearer ${currentAccessToken}` } })
+            // Необходимо сделать разблокировку карты для других пользователей
+            await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), {headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
+            commit('UNBLOCK_CARD')
         }
     }catch (e) {
         console.log(e)
@@ -191,6 +200,27 @@ export const getTalonAction = async ({ commit }, payload) => {
             link.href = window.URL.createObjectURL(blob)
             link.download = 'Report.pdf'
             window.open(link, '_blank')
+        }
+    }catch (e) {
+        console.log(e.response)
+    }
+}
+
+export const blockCardAction = async( {commit },cardId) => {
+    try{
+        let id = {'cardId': cardId}
+        let currentRefreshToken = localStorage.getItem('RefreshToken')
+        let accessTokenExpTime = sessionStorage.getItem('JWTExpTime');
+        let accountId = sessionStorage.getItem('AccountId');
+        let currentTime = Math.floor(Date.now() / 1000)
+        if (accessTokenExpTime <= currentTime){
+            let currentAccessToken = await doRefresh(currentRefreshToken)
+            await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), {headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'on' } })
+            commit('BLOCK_CARD', accountId)
+        }else{
+            let currentAccessToken = sessionStorage.getItem('JWT')
+            await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), {headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'on'  } })
+            commit('BLOCK_CARD', accountId)
         }
     }catch (e) {
         console.log(e.response)

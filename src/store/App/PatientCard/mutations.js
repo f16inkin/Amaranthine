@@ -49,3 +49,11 @@ export const SET_INSURANCE_COMPANY = (state, payload) => {
   state.patientCard.InsuranceCompanyName = payload.InsuranceCompanyName
   state.insuranceCompanies = []
 }
+
+export const BLOCK_CARD = (state, accountId) => {
+  state.patientCard.Owner = accountId
+}
+
+export const UNBLOCK_CARD = (state) => {
+  state.patientCard.Owner = ''
+}

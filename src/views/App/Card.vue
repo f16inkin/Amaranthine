@@ -4,7 +4,9 @@
             <Toolbar class="p-p-1">
                 <template #left>
                     <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
-                    <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
+                    <div v-show="isBlocked">
+                        <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
+                    </div>
                     <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon"/>
                 </template>
                 <template #right>
@@ -46,8 +48,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import SelectButton from 'primevue/components/selectbutton/SelectButton'
@@ -68,6 +69,15 @@ export default {
     const searchString = ref('')
     const page = ref(1)
     const offset = ref(5)
+    const card = computed(() => store.state.card.patientCard)
+    const isBlocked = computed(() => {
+        if (card.value.Owner === ''){
+            return false
+        }else {
+            let accountId = sessionStorage.getItem('AccountId')
+            return card.value.Owner === accountId
+        }
+    })
     const getCards = () => {
       store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
       router.push({ name: 'get.cards' })
@@ -87,6 +97,8 @@ export default {
       sections,
       currentSection,
       searchString,
+      isBlocked,
+      card,
       getCards,
       printTalon
     }

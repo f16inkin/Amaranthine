@@ -4,10 +4,10 @@
             <i class="pi pi-user p-text-bold" style="color: #15cc15"><span class="p-text-bold" style="color: black"> Персональные данные</span></i>
         </template>
         <template #icons>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="editCard" v-show="!onEdit" v-tooltip.top="'Редактировать'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="editCard" v-show="!onEdit" v-tooltip.top="'Редактировать'" :disabled = "editButtonDisabled">
                 <span class="pi pi-pencil"></span>
             </button>
-            <button class="p-panel-header-icon p-link p-mr-2" @click="saveCard" v-show="onEdit" v-tooltip.top="'Сохранить'">
+            <button class="p-panel-header-icon p-link p-mr-2" @click="saveCard" v-show="onEdit" v-tooltip.top="'Сохранить'" :disabled = "saveButtonDisabled">
                 <span class="pi pi-save"></span>
             </button>
         </template>
@@ -134,6 +134,8 @@ export default {
   setup () {
     const store = useStore()
     const onEdit = ref(false)
+    const editButtonDisabled = ref(false)
+    const saveButtonDisabled = ref(true)
     const card = computed(() => store.state.card.patientCard)
     const fullName = computed(() => (card.value.Surname + ' ' + card.value.FirstName + ' ' + card.value.SecondName))
     const gender = computed(() => {
@@ -141,23 +143,29 @@ export default {
       else return 'Женский'
     })
     const genders = { male: 1, female: 2 }
-    const editCard = () => {
+    const editCard = async() => {
       onEdit.value = !onEdit.value
+      editButtonDisabled.value = !editButtonDisabled.value
+      await store.dispatch('card/blockCardAction', card.value.CardId)
+      //Кнопка сохранения появляется тепреь только опсле блокировки карты
+      saveButtonDisabled.value = !saveButtonDisabled.value
     }
-    const saveCard = () => {
-      store.dispatch('card/updateCardAction', card.value.CardId)
+    const saveCard = async() => {
       onEdit.value = !onEdit.value
+      saveButtonDisabled.value = !saveButtonDisabled.value
+      await store.dispatch('card/updateCardAction', card.value.CardId)
+      editButtonDisabled.value = !editButtonDisabled.value
     }
     return {
       card,
       onEdit,
+      editButtonDisabled,
+      saveButtonDisabled,
       fullName,
       gender,
       genders,
       editCard,
       saveCard
-      // card: computed(() => store.state.card.patientCard),
-      // fullName: computed(() => (card.value.Surname + ' ' + card.value.FirstName))
     }
   }
 }
