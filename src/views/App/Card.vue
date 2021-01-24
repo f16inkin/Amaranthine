@@ -5,9 +5,11 @@
             <Toolbar class="p-p-1">
                 <template #left>
                     <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
+                    <transition name="fade">
                     <div v-show="isBlocked">
-                        <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" />
+                        <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" @click="unblockCard"/>
                     </div>
+                    </transition>
                     <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon"/>
                 </template>
                 <template #right>
@@ -92,6 +94,9 @@ export default {
         await store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
         isPrinted.value = false
     }
+    const unblockCard = () => {
+        store.dispatch('card/unblockCardAction', card.value.CardId)
+    }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
       { name: 'Флюорография', icon: '', value: 'CardFluorography' },
@@ -107,7 +112,8 @@ export default {
       card,
       isPrinted,
       getCards,
-      printTalon
+      printTalon,
+      unblockCard
     }
   }
 }
@@ -150,5 +156,11 @@ export default {
         box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
         border-radius: 4px;
         margin-bottom: 2rem;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .8s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
     }
 </style>
