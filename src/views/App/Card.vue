@@ -1,5 +1,6 @@
 <template>
     <div>
+        <SpinPreloader v-show="isPrinted"></SpinPreloader>
         <div id="card-search-panel">
             <Toolbar class="p-p-1">
                 <template #left>
@@ -59,9 +60,11 @@ import CardTablet from '../../components/App/PatientCard/CardTablet'
 import InputText from 'primevue/components/inputtext/InputText'
 import Button from 'primevue/components/button/Button'
 import Toolbar from 'primevue/components/toolbar/Toolbar'
+import SpinPreloader from "../../components/Core/Preloaders/SpinPreloader";
 export default {
   name: 'Card',
-  components: { Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
+  components: {
+      SpinPreloader, Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
   setup () {
     const store = useStore()
     const route = useRoute()
@@ -78,13 +81,16 @@ export default {
             return card.value.Owner === accountId
         }
     })
+    const isPrinted = ref(false)
     const getCards = () => {
       store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
       router.push({ name: 'get.cards' })
     }
     const printTalon = async() => {
         let talon = 'ambulatory'
-        store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
+        isPrinted.value = true
+        await store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
+        isPrinted.value = false
     }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
@@ -99,6 +105,7 @@ export default {
       searchString,
       isBlocked,
       card,
+      isPrinted,
       getCards,
       printTalon
     }
