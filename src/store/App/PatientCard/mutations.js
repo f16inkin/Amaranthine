@@ -1,13 +1,21 @@
 const formatInsuranceCertificate = (certificate) => {
-  const pattern = new RegExp('.{1,' + 3 + '}', 'g')
-  const insuranceCertificate = certificate.match(pattern)
-  return insuranceCertificate.splice(0, 3).join('-') + ' ' + insuranceCertificate
+  if (certificate !== null && certificate !== ''){
+    const pattern = new RegExp('.{1,' + 3 + '}', 'g')
+    const insuranceCertificate = certificate.match(pattern)
+    return insuranceCertificate.splice(0, 3).join('-') + ' ' + insuranceCertificate
+  }else {
+    return 'Необходимо заполнить СНИЛС'
+  }
 }
 
 const formatPolicyNumber = (policy) => {
-  const pattern = new RegExp('.{1,' + 4 + '}', 'g')
-  const policyNumber = policy.match(pattern)
-  return policyNumber.join('-')
+  if (policy !== null && policy !== ''){
+    const pattern = new RegExp('.{1,' + 4 + '}', 'g')
+    const policyNumber = policy.match(pattern)
+    return policyNumber.join('-')
+  }else {
+    return 'Необходимо заполнить ПОЛИС'
+  }
 }
 
 export const GET_CARD = (state, card) => {
