@@ -1,24 +1,7 @@
 <template>
     <div>
-        <SpinPreloader v-show="isPrinted"></SpinPreloader>
         <div id="card-search-panel">
-            <Toolbar class="p-p-1">
-                <template #left>
-                    <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" />
-                    <transition name="fade">
-                    <div v-show="isBlocked">
-                        <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" @click="unblockCard"/>
-                    </div>
-                    </transition>
-                    <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon"/>
-                </template>
-                <template #right>
-                    <div class="p-inputgroup">
-                        <InputText class="p-inputtext" placeholder="ФИО, СНИЛС или номер полиса" style="width: 300px;" v-on:keypress.enter="getCards" v-model="searchString"/>
-                        <Button icon="pi pi-search" class="p-button-warning" @click="getCards"/>
-                    </div>
-                </template>
-            </Toolbar>
+            <CardControlButtons></CardControlButtons>
         </div>
         <div id="card-wrapper">
             <div class="card-body">
@@ -52,7 +35,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute} from 'vue-router'
 import { useStore } from 'vuex'
 import SelectButton from 'primevue/components/selectbutton/SelectButton'
 import CardMain from '../../components/App/PatientCard/CardMain'
@@ -62,41 +45,15 @@ import CardTablet from '../../components/App/PatientCard/CardTablet'
 import InputText from 'primevue/components/inputtext/InputText'
 import Button from 'primevue/components/button/Button'
 import Toolbar from 'primevue/components/toolbar/Toolbar'
-import SpinPreloader from "../../components/Core/Preloaders/SpinPreloader";
+import CardControlButtons from "../../components/App/PatientCard/CardControlButtons";
 export default {
   name: 'Card',
   components: {
-      SpinPreloader, Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
+      CardControlButtons, Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
   setup () {
     const store = useStore()
     const route = useRoute()
-    const router = useRouter()
-    const searchString = ref('')
-    const page = ref(1)
-    const offset = ref(5)
     const card = computed(() => store.state.card.patientCard)
-    const isBlocked = computed(() => {
-        if (card.value.Owner === ''){
-            return false
-        }else {
-            let accountId = sessionStorage.getItem('AccountId')
-            return card.value.Owner === accountId
-        }
-    })
-    const isPrinted = ref(false)
-    const getCards = () => {
-      store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
-      router.push({ name: 'get.cards' })
-    }
-    const printTalon = async() => {
-        let talon = 'ambulatory'
-        isPrinted.value = true
-        await store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
-        isPrinted.value = false
-    }
-    const unblockCard = () => {
-        store.dispatch('card/unblockCardAction', card.value.CardId)
-    }
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
       { name: 'Флюорография', icon: '', value: 'CardFluorography' },
@@ -107,13 +64,7 @@ export default {
     return {
       sections,
       currentSection,
-      searchString,
-      isBlocked,
-      card,
-      isPrinted,
-      getCards,
-      printTalon,
-      unblockCard
+      card
     }
   }
 }
@@ -156,11 +107,5 @@ export default {
         box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
         border-radius: 4px;
         margin-bottom: 2rem;
-    }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .8s;
-    }
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
     }
 </style>
