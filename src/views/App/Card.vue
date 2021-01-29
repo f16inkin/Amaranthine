@@ -35,7 +35,7 @@
 
 <script>
 import { computed, ref } from 'vue'
-import { useRoute} from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import SelectButton from 'primevue/components/selectbutton/SelectButton'
 import CardMain from '../../components/App/PatientCard/CardMain'
@@ -45,11 +45,10 @@ import CardTablet from '../../components/App/PatientCard/CardTablet'
 import InputText from 'primevue/components/inputtext/InputText'
 import Button from 'primevue/components/button/Button'
 import Toolbar from 'primevue/components/toolbar/Toolbar'
-import CardControlButtons from "../../components/App/PatientCard/CardControlButtons";
+import CardControlButtons from '../../components/App/PatientCard/CardControlButtons'
 export default {
   name: 'Card',
-  components: {
-      CardControlButtons, Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
+  components: { CardControlButtons, Toolbar, Button, InputText, CardTablet, CardVaccinations, CardFluorography, CardMain, SelectButton },
   setup () {
     const store = useStore()
     const route = useRoute()

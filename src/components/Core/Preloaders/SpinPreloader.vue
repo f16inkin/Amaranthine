@@ -9,9 +9,9 @@
 </template>
 
 <script>
-    export default {
-        name: "SpinPreloader"
-    }
+export default {
+  name: 'SpinPreloader'
+}
 </script>
 
 <style scoped>

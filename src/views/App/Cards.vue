@@ -32,15 +32,11 @@ import { useStore } from 'vuex'
 import DataTable from 'primevue/components/datatable/DataTable'
 import Column from 'primevue/components/column/Column'
 import Button from 'primevue/components/button/Button'
-import InputText from 'primevue/components/inputtext/InputText'
 import Badge from 'primevue/components/badge/Badge'
-import Toolbar from 'primevue/components/toolbar/Toolbar'
-import Dialog from 'primevue/components/dialog/Dialog'
-import InputMask from 'primevue/components/inputmask/InputMask'
 import CardControlButtons from '../../components/App/PatientCard/CardControlButtons'
 export default {
   name: 'Cards',
-  components: {CardControlButtons, InputMask, Dialog, Toolbar, Badge, InputText, Button, Column, DataTable },
+  components: { CardControlButtons, Badge, Button, Column, DataTable },
   setup () {
     const store = useStore()
     const cards = computed(() => store.state.card.patientCards.Cards)

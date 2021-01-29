@@ -22,43 +22,41 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import { ref } from 'vue'
-    import { useRouter } from 'vue-router'
-    import Button from "primevue/components/button/Button";
-    export default {
-        name: "Auth",
-        components: {Button},
-        setup () {
-            const apiUrl = 'http://192.168.0.6'
-            const router = useRouter()
-            const userName = ref('')
-            const userPassword = ref('')
-            const doAuth = async() => {
-                try {
-                    let tokens = await axios.get(`${apiUrl}/api/v1/auth/doAuth`, { params: { UserName: userName.value, UserPassword: userPassword.value } })
-                    let accessToken = tokens.data.AccessToken
-                    let refreshToken = tokens.data.RefreshToken
-                    let payload = JSON.parse(atob(accessToken.split('.')[1]))
-                    sessionStorage.setItem('JWT', accessToken)
-                    sessionStorage.setItem('JWTExpTime', payload.exp)
-                    sessionStorage.setItem('AccountId', payload.accountId)
-                    //sessionStorage.setItem('UserName', payload.user.UserName)
-                    sessionStorage.setItem('AccountPermissions', payload.accountPermissions)
-                    sessionStorage.setItem('Talons', payload.talons)
-                    localStorage.setItem('RefreshToken', refreshToken)
-                    router.push({ name: 'app.desktop' })
-                }catch (e) {
-                    console.log(e.response)
-                }
-            }
-            return {
-                userName,
-                userPassword,
-                doAuth
-            }
-        }
+import axios from 'axios'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+export default {
+  name: 'Auth',
+  setup () {
+    const apiUrl = 'http://192.168.0.6'
+    const router = useRouter()
+    const userName = ref('')
+    const userPassword = ref('')
+    const doAuth = async () => {
+      try {
+        const tokens = await axios.get(`${apiUrl}/api/v1/auth/doAuth`, { params: { UserName: userName.value, UserPassword: userPassword.value } })
+        const accessToken = tokens.data.AccessToken
+        const refreshToken = tokens.data.RefreshToken
+        const payload = JSON.parse(atob(accessToken.split('.')[1]))
+        sessionStorage.setItem('JWT', accessToken)
+        sessionStorage.setItem('JWTExpTime', payload.exp)
+        sessionStorage.setItem('AccountId', payload.accountId)
+        // sessionStorage.setItem('UserName', payload.user.UserName)
+        sessionStorage.setItem('AccountPermissions', payload.accountPermissions)
+        sessionStorage.setItem('Talons', payload.talons)
+        localStorage.setItem('RefreshToken', refreshToken)
+        router.push({ name: 'app.desktop' })
+      } catch (e) {
+        console.log(e.response)
+      }
     }
+    return {
+      userName,
+      userPassword,
+      doAuth
+    }
+  }
+}
 </script>
 
 <style scoped>

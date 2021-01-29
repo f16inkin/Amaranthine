@@ -6,7 +6,7 @@ import IsLoggedMiddleware from './middleware/IsLoggedMiddleware'
 import store from '../store'
 
 const routes = [
-  //APPLICATION
+  // APPLICATION
   {
     path: '/',
     name: 'app.desktop',
@@ -15,7 +15,7 @@ const routes = [
       title: 'Рабочий стол',
       layout: 'App',
       middleware: [AuthMiddleware]
-    },
+    }
   },
   {
     path: '/app/patient-card/cards/:id',
@@ -37,7 +37,7 @@ const routes = [
       layout: 'App',
       middleware: [AuthMiddleware, AccessMiddleware],
       permission: 'GET_CARDS'
-    },
+    }
   },
   // ADMINISTRATION
   {
@@ -80,12 +80,10 @@ router.beforeEach((to, from, next) => {
     router
   }
 
-
   return middleware[0]({
     ...context,
     next: pipeline(context, middleware, 1)
   })
-
 })
 
 export default router

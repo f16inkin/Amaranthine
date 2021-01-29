@@ -107,7 +107,7 @@
 
                     </div>
                     <template #footer>
-                        <Button label="Создать карту" @click="" class="p-button-sm"/>
+                        <Button label="Создать карту" @click="showCardCreationForm" class="p-button-sm"/>
                     </template>
                 </Dialog>
             </div>
@@ -119,66 +119,65 @@
 </template>
 
 <script>
-    import { computed, ref } from 'vue'
-    import { useStore } from 'vuex'
-    import { useRoute, useRouter } from 'vue-router'
-    import Button from 'primevue/components/button/Button'
-    import Badge from 'primevue/components/badge/Badge'
-    import Toolbar from 'primevue/components/toolbar/Toolbar'
-    import Dialog from 'primevue/components/dialog/Dialog'
-    import InputMask from 'primevue/components/inputmask/InputMask'
-    import SpinPreloader from "../../Core/Preloaders/SpinPreloader";
-    export default {
-        name: 'CardControlButtons',
-        components: {SpinPreloader, Button, InputMask, Dialog, Toolbar, Badge },
-        setup() {
-            const store = useStore()
-            const router = useRouter()
-            const route = useRoute()
-            const searchString = ref('')
-            const page = ref(1)
-            const offset = ref(5)
-            const displayModal = ref(false)
-            const isLoaded = ref(false)
-            const getCards = async() => {
-                await store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
-                if (route.name === 'get.card'){
-                    router.push({ name: 'get.cards' })
-                }
-            }
-            const card = computed(() => store.state.card.patientCard)
-            const isBlocked = computed(() => {
-                if (card.value.Owner === ''){
-                    return false
-                }else {
-                    let accountId = sessionStorage.getItem('AccountId')
-                    return card.value.Owner === accountId
-                }
-            })
-            const unblockCard = () => {
-                store.dispatch('card/unblockCardAction', card.value.CardId)
-            }
-            const showCardCreationForm = () => {
-                displayModal.value = !displayModal.value
-            }
-            const printTalon = async() => {
-                let talon = 'ambulatory'
-                isLoaded.value = true
-                await store.dispatch('card/getTalonAction', {talon: talon, id: route.params.id })
-                isLoaded.value = false
-            }
-            return {
-                searchString,
-                displayModal,
-                isBlocked,
-                isLoaded,
-                getCards,
-                showCardCreationForm,
-                unblockCard,
-                printTalon
-            }
-        }
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import Button from 'primevue/components/button/Button'
+import Toolbar from 'primevue/components/toolbar/Toolbar'
+import Dialog from 'primevue/components/dialog/Dialog'
+import InputMask from 'primevue/components/inputmask/InputMask'
+import SpinPreloader from '../../Core/Preloaders/SpinPreloader'
+export default {
+  name: 'CardControlButtons',
+  components: { SpinPreloader, Button, InputMask, Dialog, Toolbar },
+  setup () {
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+    const searchString = ref('')
+    const page = ref(1)
+    const offset = ref(5)
+    const displayModal = ref(false)
+    const isLoaded = ref(false)
+    const getCards = async () => {
+      await store.dispatch('card/getCardsAction', { searchString: searchString.value, page: page.value, offset: offset.value })
+      if (route.name === 'get.card') {
+        router.push({ name: 'get.cards' })
+      }
     }
+    const card = computed(() => store.state.card.patientCard)
+    const isBlocked = computed(() => {
+      if (card.value.Owner === '') {
+        return false
+      } else {
+        const accountId = sessionStorage.getItem('AccountId')
+        return card.value.Owner === accountId
+      }
+    })
+    const unblockCard = () => {
+      store.dispatch('card/unblockCardAction', card.value.CardId)
+    }
+    const showCardCreationForm = () => {
+      displayModal.value = !displayModal.value
+    }
+    const printTalon = async () => {
+      const talon = 'ambulatory'
+      isLoaded.value = true
+      await store.dispatch('card/getTalonAction', { talon: talon, id: route.params.id })
+      isLoaded.value = false
+    }
+    return {
+      searchString,
+      displayModal,
+      isBlocked,
+      isLoaded,
+      getCards,
+      showCardCreationForm,
+      unblockCard,
+      printTalon
+    }
+  }
+}
 </script>
 
 <style scoped>

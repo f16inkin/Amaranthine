@@ -1,19 +1,19 @@
 const formatInsuranceCertificate = (certificate) => {
-  if (certificate !== null && certificate !== ''){
+  if (certificate !== null && certificate !== '') {
     const pattern = new RegExp('.{1,' + 3 + '}', 'g')
     const insuranceCertificate = certificate.match(pattern)
     return insuranceCertificate.splice(0, 3).join('-') + ' ' + insuranceCertificate
-  }else {
+  } else {
     return 'Необходимо заполнить СНИЛС'
   }
 }
 
 const formatPolicyNumber = (policy) => {
-  if (policy !== null && policy !== ''){
+  if (policy !== null && policy !== '') {
     const pattern = new RegExp('.{1,' + 4 + '}', 'g')
     const policyNumber = policy.match(pattern)
     return policyNumber.join('-')
-  }else {
+  } else {
     return 'Необходимо заполнить ПОЛИС'
   }
 }

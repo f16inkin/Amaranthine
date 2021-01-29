@@ -143,14 +143,14 @@ export default {
       else return 'Женский'
     })
     const genders = { male: 1, female: 2 }
-    const editCard = async() => {
+    const editCard = async () => {
       onEdit.value = !onEdit.value
       editButtonDisabled.value = !editButtonDisabled.value
       await store.dispatch('card/blockCardAction', card.value.CardId)
-      //Кнопка сохранения появляется тепреь только опсле блокировки карты
+      // Кнопка сохранения появляется тепреь только опсле блокировки карты
       saveButtonDisabled.value = !saveButtonDisabled.value
     }
-    const saveCard = async() => {
+    const saveCard = async () => {
       onEdit.value = !onEdit.value
       saveButtonDisabled.value = !saveButtonDisabled.value
       await store.dispatch('card/updateCardAction', card.value.CardId)

@@ -1,23 +1,22 @@
-import {doRefresh} from "../../services/RefreshTokens";
+import { doRefresh } from '../../services/RefreshTokens'
 
-export default async function process({next, router}) {
-    let currentAccessToken = sessionStorage.getItem('JWT')
-    if (currentAccessToken){
-        return next()
+export default async function process ({ next, router }) {
+  const currentAccessToken = sessionStorage.getItem('JWT')
+  if (currentAccessToken) {
+    return next()
+  } else {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    if (currentRefreshToken) {
+      await doRefresh(currentRefreshToken)
+      console.log('Y\'ll be redirecting after 3 seconds')
+      await new Promise((resolve, reject) => setTimeout(resolve, 3000))
+      return router.push({ name: 'app.desktop' })
+    } else {
+      return router.push({ name: 'core.authenticate' })
     }
-    else {
-        let currentRefreshToken = localStorage.getItem('RefreshToken')
-        if (currentRefreshToken){
-            await doRefresh(currentRefreshToken);
-            console.log('Y\'ll be redirecting after 3 seconds')
-            await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-            return router.push({ name: 'app.desktop' })
-        }else{
-            return router.push({ name: 'core.authenticate' })
-        }
-    }
+  }
 }
-/*export default async function process({next, router}) {
+/* export default async function process({next, router}) {
     let currentAccessToken = sessionStorage.getItem('JWT')
     let currentRefreshToken = localStorage.getItem('RefreshToken')
     let accessTokenExpTime = sessionStorage.getItem('JWTExpTime');
@@ -42,4 +41,4 @@ export default async function process({next, router}) {
             return router.push({ name: 'core.authenticate' })
         }
     }
-}*/
+} */
