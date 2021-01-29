@@ -3,6 +3,13 @@ import { doRefresh } from '../../../services/RefreshTokens'
 
 const apiUrl = 'http://192.168.0.6'
 
+const prepareCardCreateDTO = (DTO) => {
+  DTO.CardNumber = parseInt(DTO.CardNumber)
+  DTO.PolicyNumber = DTO.PolicyNumber.replace(/[^0-9]/gim, '')
+  DTO.InsuranceCertificate = DTO.InsuranceCertificate.replace(/[^0-9]/gim, '')
+  return DTO
+}
+
 const prepareDataForUpdate = (state) => {
   const card = state.patientCard
   card.CardNumber = parseInt(card.CardNumber)
@@ -100,6 +107,25 @@ export const getCardsAction = async ({ commit }, payload) => {
      * Кароче тут будутвызваться еррор хендлеры в зависимости от кода и ниструкции к этому коду.
      * Например может придти 401 - токен не найден, а может придти 401 - токен сигнатура не верна(сейчас поменял на 400)
      */
+    console.log(e)
+  }
+}
+
+export const createCardAction = async ({ commit }, payload) => {
+  try{
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    if (accessTokenExpTime <= currentTime) {
+      const DTO = prepareCardCreateDTO(payload.cardCreateDTO)
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      return await axios.post(`${apiUrl}/api/v1/cards`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }else {
+      const DTO = prepareCardCreateDTO(payload.cardCreateDTO)
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      return await axios.post(`${apiUrl}/api/v1/cards`, JSON.stringify(payload.cardCreateDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }
+  }catch (e) {
     console.log(e)
   }
 }
