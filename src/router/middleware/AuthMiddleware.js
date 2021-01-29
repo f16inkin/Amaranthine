@@ -10,7 +10,7 @@ export default async function process ({ next, router }) {
       await doRefresh(currentRefreshToken)
       console.log('Y\'ll be redirecting after 3 seconds')
       await new Promise((resolve, reject) => setTimeout(resolve, 3000))
-      return router.push({ name: 'app.desktop' })
+      return router.push({ name: 'get.cards' })
     } else {
       return router.push({ name: 'core.authenticate' })
     }

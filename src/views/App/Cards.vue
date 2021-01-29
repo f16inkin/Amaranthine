@@ -4,7 +4,9 @@
             <CardControlButtons></CardControlButtons>
         </div>
         <div id="cards-wrapper">
-            <DataTable :value="cards" class="p-datatable-sm p-datatable-striped p-datatable-gridlines">
+            <DataTable :value="cards" :paginator="true" :rows="10"
+                       paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                       :rowsPerPageOptions="[10,20,50]">
                 <template #header>
                     <div style="text-align: right">
                         Карты найденные по запросу: <Badge severity="success" :value="cardsCount"></Badge>

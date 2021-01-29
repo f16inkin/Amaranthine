@@ -148,7 +148,7 @@ export default {
     const route = useRoute()
     const searchString = ref('')
     const page = ref(1)
-    const offset = ref(10)
+    const offset = ref(200)
     const displayModal = ref(false)
     const isLoading = ref(false)
     const card = computed(() => store.state.card.patientCard)
