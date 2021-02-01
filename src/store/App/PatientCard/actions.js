@@ -271,3 +271,23 @@ export const unblockCardAction = async ({ commit }, cardId) => {
     console.log(e.response)
   }
 }
+
+export const getFluorographiesAction = async ( {commit }, id) => {
+  try {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const fluorographies = await axios.get(`${apiUrl}/api/v1/fluorographies/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_FLUOROGRAPHIES', fluorographies.data)
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      const fluorographies = await axios.get(`${apiUrl}/api/v1/fluorographies/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_FLUOROGRAPHIES', fluorographies.data)
+    }
+  }catch (e) {
+    console.log(e.response)
+  }
+}

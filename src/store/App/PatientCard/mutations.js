@@ -65,3 +65,7 @@ export const BLOCK_CARD = (state, accountId) => {
 export const UNBLOCK_CARD = (state) => {
   state.patientCard.Owner = ''
 }
+
+export const GET_FLUOROGRAPHIES = (state, fluorographies) => {
+  state.fluorographies = fluorographies
+}
