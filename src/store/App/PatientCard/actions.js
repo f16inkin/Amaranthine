@@ -291,3 +291,41 @@ export const getFluorographiesAction = async ( {commit }, id) => {
     console.log(e.response)
   }
 }
+
+export const getFluorographyOptionsAction = async ({commit }) => {
+  try{
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const options = await axios.get(`${apiUrl}/api/v1/fluorography/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_FLUOROGRAPHY_OPTIONS', options.data)
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      const options = await axios.get(`${apiUrl}/api/v1/fluorography/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_FLUOROGRAPHY_OPTIONS', options.data)
+    }
+  }catch (e) {
+    console.log(e.response)
+  }
+}
+
+export const createFluorographyAction = async ({commit}, DTO) => {
+  try {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO.recordDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO.recordDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }
+  }catch (e) {
+    console.log(e.response)
+  }
+}

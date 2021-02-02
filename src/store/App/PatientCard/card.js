@@ -55,7 +55,8 @@ const state = {
     localities: [],
     streets: []
   },
-  fluorographies: []
+  fluorographies: [],
+  fluorographyOptions: []
 }
 
 export default {

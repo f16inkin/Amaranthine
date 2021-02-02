@@ -69,3 +69,7 @@ export const UNBLOCK_CARD = (state) => {
 export const GET_FLUOROGRAPHIES = (state, fluorographies) => {
   state.fluorographies = fluorographies
 }
+
+export const GET_FLUOROGRAPHY_OPTIONS = (state, options) => {
+  state.fluorographyOptions = options
+}
