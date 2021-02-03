@@ -3,7 +3,6 @@
         <Toolbar class="p-p-1">
             <template #left>
                 <Button label="Добавить" icon="pi pi-plus" class="p-button-success p-mr-2 p-button-sm" @click="showFluorographyCreationForm"/>
-                <Button label="Удалить" icon="pi pi-trash" class="p-button-danger p-mr-2 p-button-sm"/>
             </template>
         </Toolbar>
     </div>
@@ -24,54 +23,32 @@
             <Column header="Управление">
                 <template #body="slotProps">
                     <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editFluorography(slotProps.data)" />
-                    <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+                    <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="deleteRecord(slotProps.data)" />
                 </template>
             </Column>
         </DataTable>
     </div>
     <div id="overlay">
         <div id="fluorography-create-dialog">
-            <Dialog v-model:visible="showCreationForm" :style="{width: '850px'}" :modal="true">
+            <Dialog v-model:visible="showCreationForm" :style="{width: '950px'}" :modal="true">
                 <template #header>
                     <b>Создание новой записи</b>
                 </template>
                 <div class="p-grid">
-                    <div id="fluorography-date-block" class="p-col-4">
+                    <div id="fluorography-date-block" class="p-col-3">
                         <div class="p-mb-2">
-                            <label for="fluorography-date" class="p-text-bold">Дата:</label>
+                            <label for="fluorography-date" class="p-text-bold">Дата:<i style="color:red">*</i></label>
                         </div>
                         <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-user"></i>
                             </span>
-                            <InputText v-model="recordDTO.Date" id="fluorography-date" type="date" class="p-inputtext-sm" />
-                        </div>
-                    </div>
-                    <div id="fluorography-number-block" class="p-col-4">
-                        <div class="p-mb-2">
-                            <label for="fluorography-number" class="p-text-bold">Номер:</label>
-                        </div>
-                        <div class="p-inputgroup">
-                            <span class="p-inputgroup-addon">
-                            <i class="pi pi-user"></i>
-                            </span>
-                            <InputText v-model="recordDTO.Number" id="fluorography-number" type="text" class="p-inputtext-sm" placeholder="Введите номер"/>
-                        </div>
-                    </div>
-                    <div id="fluorography-snapshot-block" class="p-col-4">
-                        <div class="p-mb-2">
-                            <label for="fluorography-snapshot" class="p-text-bold">Снимок:</label>
-                        </div>
-                        <div class="p-inputgroup">
-                            <span class="p-inputgroup-addon">
-                            <i class="pi pi-user"></i>
-                            </span>
-                            <InputText v-model="recordDTO.Snapshot" id="fluorography-snapshot" type="text" class="p-inputtext-sm" placeholder="Введите снимок"/>
+                            <InputText v-model="recordDTO.Date" id="fluorography-date" type="date" class="p-inputtext-sm"/>
                         </div>
                     </div>
                     <div id="fluorography-type-block" class="p-col-4">
                         <div class="p-mb-2">
-                            <label class="p-text-bold">Тип исследования:</label>
+                            <label class="p-text-bold">Тип исследования:<i style="color:red">*</i></label>
                         </div>
                         <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
@@ -80,15 +57,37 @@
                             <Dropdown appendTo="body" class="p-inputtext-sm" v-model="recordDTO.Type" :options="fluorographyOptions.types" optionLabel="typeName" scrollHeight="300px" placeholder="Выберите тип"></Dropdown>
                         </div>
                     </div>
-                    <div id="fluorography-result-block" class="p-col-8">
+                    <div id="fluorography-result-block" class="p-col-5">
                         <div class="p-mb-2">
-                            <label class="p-text-bold">Результат:</label>
+                            <label class="p-text-bold">Результат:<i style="color:red">*</i></label>
                         </div>
                         <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-user"></i>
                             </span>
                             <Dropdown appendTo="body" class="p-inputtext-sm" v-model="recordDTO.Result" :options="fluorographyOptions.results" optionLabel="resultName" scrollHeight="300px" placeholder="Выбирите результат"></Dropdown>
+                        </div>
+                    </div>
+                    <div id="fluorography-number-block" class="p-col-2">
+                        <div class="p-mb-2">
+                            <label for="fluorography-number" class="p-text-bold">Номер:</label>
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                            </span>
+                            <InputText v-model="recordDTO.Number" id="fluorography-number" type="text" class="p-inputtext-sm" placeholder="Номер"/>
+                        </div>
+                    </div>
+                    <div id="fluorography-snapshot-block" class="p-col-2">
+                        <div class="p-mb-2">
+                            <label for="fluorography-snapshot" class="p-text-bold">Снимок:</label>
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                            </span>
+                            <InputText v-model="recordDTO.Snapshot" id="fluorography-snapshot" type="text" class="p-inputtext-sm" placeholder="Снимок"/>
                         </div>
                     </div>
                     <div id="fluorography-dose-block" class="p-col-3">
@@ -154,8 +153,10 @@ export default {
         store.dispatch('card/getFluorographiesAction', route.params.id)
         store.dispatch('card/getFluorographyOptionsAction')
         const fluorographies = computed(() => store.state.card.fluorographies)
+        const card = computed(() => store.state.card.patientCard)
         const fluorographyOptions = computed(() => store.state.card.fluorographyOptions)
         const recordDTO = reactive({
+            PatientCard: card.value.CardId,
             Date: null,
             Number: null,
             Snapshot: null,
@@ -170,12 +171,17 @@ export default {
         const showFluorographyCreationForm = () => {
             showCreationForm.value = !showCreationForm.value
         }
-        const createRecord = () => {
+        const createRecord = async() => {
             showCreationForm.value = false
-            const result = store.dispatch('card/createFluorographyAction', { recordDTO: recordDTO })
+            const result = await store.dispatch('card/createFluorographyAction', recordDTO)
+            if (result.status === 201){
+                store.dispatch('card/getFluorographiesAction',  route.params.id)
+            }else{
+                showCreationForm.value = true
+            }
         }
-        const createCard = async () => {
-
+        const deleteRecord = (data) => {
+            console.log(data)
         }
         return {
             filters,
@@ -184,7 +190,8 @@ export default {
             recordDTO,
             showCreationForm,
             showFluorographyCreationForm,
-            createRecord
+            createRecord,
+            deleteRecord
         }
     }
 }

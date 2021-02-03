@@ -10,6 +10,15 @@ const prepareCardCreateDTO = (DTO) => {
   return DTO
 }
 
+const prepareFluorographyCreateDTO = (DTO) => {
+    DTO.Type = parseInt(DTO.Type.typeId)
+    DTO.Result = parseInt(DTO.Result.resultId)
+    DTO.Dose = parseInt(DTO.Dose) ? parseInt(DTO.Dose.doseId) : null
+    DTO.Sender = parseInt(DTO.Sender) ? parseInt(DTO.Sender.senderId) : null
+    DTO.Snapshot = parseInt(DTO.Snapshot) || 1
+    return DTO
+}
+
 const prepareDataForUpdate = (state) => {
   const card = state.patientCard
   card.CardNumber = parseInt(card.CardNumber)
@@ -312,20 +321,40 @@ export const getFluorographyOptionsAction = async ({commit }) => {
   }
 }
 
-export const createFluorographyAction = async ({commit}, DTO) => {
+export const createFluorographyAction = async ({commit}, payload) => {
   try {
     const currentRefreshToken = localStorage.getItem('RefreshToken')
     const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
     const currentTime = Math.floor(Date.now() / 1000)
     const currentTimePlus15 = currentTime + 15
     if (accessTokenExpTime <= currentTimePlus15) {
+      const DTO = prepareFluorographyCreateDTO(payload)
       const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO.recordDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
     }else {
+      const DTO = prepareFluorographyCreateDTO(payload)
       const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO.recordDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
     }
   }catch (e) {
-    console.log(e.response)
+    console.log(e)
   }
+}
+
+export const deleteFluorographyAction = async ({commit}, id) => {
+    try{
+        const currentRefreshToken = localStorage.getItem('RefreshToken')
+        const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+        const currentTime = Math.floor(Date.now() / 1000)
+        const currentTimePlus15 = currentTime + 15
+        if (accessTokenExpTime <= currentTimePlus15) {
+            const currentAccessToken = await doRefresh(currentRefreshToken)
+            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+        }else {
+            const currentAccessToken = sessionStorage.getItem('JWT')
+            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+        }
+    }catch (e) {
+      console.log(e)
+    }
 }
