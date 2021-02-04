@@ -341,7 +341,7 @@ export const createFluorographyAction = async ({commit}, payload) => {
   }
 }
 
-export const deleteFluorographyAction = async ({commit}, id) => {
+export const deleteFluorographyAction = async ({commit}, ids) => {
     try{
         const currentRefreshToken = localStorage.getItem('RefreshToken')
         const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
@@ -349,10 +349,10 @@ export const deleteFluorographyAction = async ({commit}, id) => {
         const currentTimePlus15 = currentTime + 15
         if (accessTokenExpTime <= currentTimePlus15) {
             const currentAccessToken = await doRefresh(currentRefreshToken)
-            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data: ids })
         }else {
             const currentAccessToken = sessionStorage.getItem('JWT')
-            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data:  ids })
         }
     }catch (e) {
       console.log(e)

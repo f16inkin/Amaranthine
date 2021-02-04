@@ -180,8 +180,13 @@ export default {
                 showCreationForm.value = true
             }
         }
-        const deleteRecord = (data) => {
-            console.log(data)
+        const deleteRecord = async (data) => {
+            const result = await store.dispatch('card/deleteFluorographyAction',  [data.FluorographyId])
+            if (result.status === 204){
+                store.dispatch('card/getFluorographiesAction',  route.params.id)
+            }else{
+                console.log('Fluorography hasn\'t deleted')
+            }
         }
         return {
             filters,
