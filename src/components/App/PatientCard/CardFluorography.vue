@@ -13,16 +13,17 @@
             <template #header>
                 <div>Результаты исследований</div>
             </template>
-            <Column field="FluorographyDate" header="Дата" :sortable="true"></Column>
-            <Column field="FluorographyNumber" header="Номер"></Column>
-            <Column field="FluorographyTypeName" header="Тип"></Column>
-            <Column field="FluorographyResultName" header="Результат" ></Column>
-            <Column field="FluorographySnapshot" header="Снимок"></Column>
-            <Column field="FluorographyDoseName" header="Доза"></Column>
-            <Column field="FluorographyNotation" header="Примечание"></Column>
-            <Column header="Управление">
+            <Column field="FluorographyDate" header="Дата" :sortable="true" headerStyle="width:10%; text-align:center;"  bodyStyle="text-align: center"/>
+            <Column field="FluorographyTypeName" header="Тип" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+            <Column field="FluorographyResultName" header="Результат" headerStyle="width:15%; text-align:center;"  bodyStyle="text-align: center"></Column>
+            <Column field="FluorographySenderName" header="Направил" headerStyle="width:7%; text-align:center;"  bodyStyle="text-align: center"></Column>
+            <Column field="FluorographyNumber" header="Номер" headerStyle="width:7%; text-align:center;"  bodyStyle="text-align: center"/>
+            <Column field="FluorographySnapshot" header="Снимок" headerStyle="width:7%; text-align:center;"  bodyStyle="text-align: center"></Column>
+            <Column field="FluorographyDoseName" header="Доза" headerStyle="width:7%; text-align:center;"  bodyStyle="text-align: center"></Column>
+            <Column field="FluorographyNotation" header="Примечание" headerStyle="width:20%; text-align:center;"  bodyStyle="text-align: center"/>
+            <Column header="Управление" headerStyle="width:9%; text-align:center;"  bodyStyle="text-align: center">
                 <template #body="slotProps">
-                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editFluorography(slotProps.data)" />
+                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" @click="editRecord(slotProps.data)" />
                     <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="deleteRecord(slotProps.data)" />
                 </template>
             </Column>
@@ -129,6 +130,11 @@
                 </template>
             </Dialog>
         </div>
+        <div id="fluorography-edit-dialog">
+            <Dialog v-model:visible="showEditForm" :style="{width: '950px'}" :modal="true">
+
+            </Dialog>
+        </div>
         <div id="loader">
             <SpinPreloader v-show="isLoading"></SpinPreloader>
         </div>
@@ -171,6 +177,7 @@ export default {
             Notation: null
         })
         const showCreationForm = ref(false)
+        const showEditForm = ref(false)
         const isLoading = ref(false)
         const filters = {}
         const showFluorographyCreationForm = () => {
@@ -186,6 +193,9 @@ export default {
             }else{
                 showCreationForm.value = true
             }
+        }
+        const editRecord = async(data)=> {
+            console.log(data)
         }
         const deleteRecord = async (data) => {
             isLoading.value = true
@@ -203,9 +213,11 @@ export default {
             fluorographyOptions,
             recordDTO,
             showCreationForm,
+            showEditForm,
             isLoading,
             showFluorographyCreationForm,
             createRecord,
+            editRecord,
             deleteRecord
         }
     }

@@ -13,8 +13,8 @@ const prepareCardCreateDTO = (DTO) => {
 const prepareFluorographyCreateDTO = (DTO) => {
     DTO.Type = parseInt(DTO.Type.typeId)
     DTO.Result = parseInt(DTO.Result.resultId)
-    DTO.Dose = parseInt(DTO.Dose) ? parseInt(DTO.Dose.doseId) : null
-    DTO.Sender = parseInt(DTO.Sender) ? parseInt(DTO.Sender.senderId) : null
+    DTO.Dose = DTO.Dose ? parseInt(DTO.Dose.doseId) : null
+    DTO.Sender = DTO.Sender ? parseInt(DTO.Sender.senderId) : null
     DTO.Snapshot = parseInt(DTO.Snapshot) || 1
     return DTO
 }
