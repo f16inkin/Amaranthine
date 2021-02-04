@@ -129,6 +129,9 @@
                 </template>
             </Dialog>
         </div>
+        <div id="loader">
+            <SpinPreloader v-show="isLoading"></SpinPreloader>
+        </div>
     </div>
 </template>
 
@@ -144,9 +147,10 @@ import Dialog from 'primevue/components/dialog/Dialog'
 import InputText from 'primevue/components/inputtext/InputText'
 import Dropdown from 'primevue/components/dropdown/Dropdown'
 import Textarea from 'primevue/components/textarea/Textarea'
+import SpinPreloader from "../../Core/Preloaders/SpinPreloader";
 export default {
   name: 'CardFluorography',
-  components: {Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
+  components: {SpinPreloader, Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
     setup (){
         const store = useStore()
         const route = useRoute()
@@ -167,23 +171,28 @@ export default {
             Notation: null
         })
         const showCreationForm = ref(false)
+        const isLoading = ref(false)
         const filters = {}
         const showFluorographyCreationForm = () => {
             showCreationForm.value = !showCreationForm.value
         }
         const createRecord = async() => {
             showCreationForm.value = false
+            isLoading.value = true
             const result = await store.dispatch('card/createFluorographyAction', recordDTO)
             if (result.status === 201){
-                store.dispatch('card/getFluorographiesAction',  route.params.id)
+                await store.dispatch('card/getFluorographiesAction',  route.params.id)
+                setTimeout(() => {isLoading.value = false}, 500)
             }else{
                 showCreationForm.value = true
             }
         }
         const deleteRecord = async (data) => {
+            isLoading.value = true
             const result = await store.dispatch('card/deleteFluorographyAction',  [data.FluorographyId])
             if (result.status === 204){
-                store.dispatch('card/getFluorographiesAction',  route.params.id)
+                await store.dispatch('card/getFluorographiesAction',  route.params.id)
+                setTimeout(() => {isLoading.value = false}, 500)
             }else{
                 console.log('Fluorography hasn\'t deleted')
             }
@@ -194,6 +203,7 @@ export default {
             fluorographyOptions,
             recordDTO,
             showCreationForm,
+            isLoading,
             showFluorographyCreationForm,
             createRecord,
             deleteRecord
