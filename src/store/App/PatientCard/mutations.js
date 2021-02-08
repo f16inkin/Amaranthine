@@ -68,6 +68,9 @@ export const UNBLOCK_CARD = (state) => {
 
 export const GET_FLUOROGRAPHIES = (state, fluorographies) => {
   state.fluorographies = fluorographies
+  Object.keys(fluorographies).forEach(function (k) {
+    fluorographies[k].FluorographyDate = new Date(fluorographies[k].FluorographyDate).toLocaleDateString()
+  })
 }
 
 export const GET_FLUOROGRAPHY_OPTIONS = (state, options) => {
