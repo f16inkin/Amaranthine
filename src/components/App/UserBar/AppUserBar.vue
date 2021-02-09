@@ -16,14 +16,29 @@
             Коваленко М.Ф.
         </div>
         <div class="p-as-center">
-            <Button label="Выход" icon="pi pi-power-off" class="p-button-sm p-button-rounded p-button-secondary"  />
+            <Button label="Выход" icon="pi pi-power-off" class="p-button-sm p-button-rounded p-button-secondary" @click="logOut" />
         </div>
     </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+import Button from 'primevue/components/button/Button'
+import Avatar from 'primevue/components/avatar/Avatar'
 export default {
-  name: 'AppUserBar'
+  name: 'AppUserBar',
+    components: {Avatar, Button},
+    setup (){
+    const router = useRouter()
+    const logOut = () => {
+        sessionStorage.clear()
+        localStorage.clear()
+        router.push({name: 'core.authenticate'})
+    }
+    return {
+        logOut
+    }
+  }
 }
 </script>
 

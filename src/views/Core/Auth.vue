@@ -45,7 +45,7 @@ export default {
         sessionStorage.setItem('AccountPermissions', payload.accountPermissions)
         sessionStorage.setItem('Talons', payload.talons)
         localStorage.setItem('RefreshToken', refreshToken)
-        router.push({ name: 'app.desktop' })
+        router.push({ name: 'get.cards' })
       } catch (e) {
         console.log(e.response)
       }
