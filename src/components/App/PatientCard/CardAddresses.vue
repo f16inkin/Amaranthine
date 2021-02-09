@@ -159,7 +159,9 @@ export default {
         }
         typingTimer = setTimeout(() => {
           store.dispatch('card/getDispositionsAction', { endpoint: endpoint, searchString: searchString, limit: 5 })
-        }, 500)
+        }, 300)
+      }else if (searchString.length === 0) {
+          store.dispatch('card/clearDispositionsAction', endpoint)
       }
     }
     const setDisposition = (payload) => {

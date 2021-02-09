@@ -199,6 +199,10 @@ export const setDispositionAction = ({ commit }, payload) => {
   commit('SET_DISPOSITION', payload)
 }
 
+export const clearDispositionsAction = ({ commit }, endpoint) => {
+    commit('CLEAR_DISPOSITIONS', endpoint)
+}
+
 export const getInsuranceCompaniesAction = async ({ commit }, payload) => {
   try {
     const currentRefreshToken = localStorage.getItem('RefreshToken')
