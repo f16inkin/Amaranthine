@@ -320,7 +320,6 @@ export default {
             DTO.FluorographyDose = {doseId: data.FluorographyDoseId, doseName: data.FluorographyDoseName}
             DTO.FluorographySnapshot = data.FluorographySnapshot
             DTO.FluorographyNotation = data.FluorographyNotation
-            console.log(DTO)
         }
         const saveRecord = async()=> {
             showEditForm.value = false

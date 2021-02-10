@@ -117,3 +117,14 @@ export const GET_FLUOROGRAPHIES = (state, fluorographies) => {
 export const GET_FLUOROGRAPHY_OPTIONS = (state, options) => {
   state.fluorographyOptions = options
 }
+
+export const GET_VACCINATIONS = (state, vaccinations) => {
+    state.vaccinations = vaccinations
+    Object.keys(vaccinations).forEach(function (k) {
+        vaccinations[k].VaccinationDate = new Date(vaccinations[k].VaccinationDate).toLocaleDateString()
+    })
+}
+
+export const GET_VACCINATION_OPTIONS = (state, options) => {
+    state.vaccinationOptions = options
+}

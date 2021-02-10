@@ -392,3 +392,43 @@ export const deleteFluorographyAction = async ({commit}, ids) => {
       console.log(e)
     }
 }
+
+export const getVaccinationsAction = async ( {commit }, id) => {
+  try {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const vaccinations = await axios.get(`${apiUrl}/api/v1/vaccinations/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_VACCINATIONS', vaccinations.data)
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      const vaccinations = await axios.get(`${apiUrl}/api/v1/vaccinations/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_VACCINATIONS', vaccinations.data)
+    }
+  }catch (e) {
+    console.log(e.response)
+  }
+}
+
+export const getVaccinationOptionsAction = async ({commit }) => {
+  try{
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const options = await axios.get(`${apiUrl}/api/v1/vaccination/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_VACCINATION_OPTIONS', options.data)
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      const options = await axios.get(`${apiUrl}/api/v1/vaccination/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      commit('GET_VACCINATION_OPTIONS', options.data)
+    }
+  }catch (e) {
+    console.log(e.response)
+  }
+}
