@@ -29,6 +29,24 @@ const prepareFluorographyDTO = (payload) => {
     return DTO
 }
 
+const prepareVaccinationDTO = (payload) => {
+  const DTO = {}
+  DTO.PatientCardId = payload.PatientCardId
+  DTO.VaccinationId = payload.VaccinationId
+  DTO.VaccinationDate = payload.VaccinationDate
+  DTO.VaccinationTypeId = parseInt(payload.VaccinationType.typeId)
+  DTO.VaccinationTypeName = payload.VaccinationType.typeName
+  DTO.VaccinationDivertId = payload.VaccinationDivert ? parseInt(payload.VaccinationDivert.divertId) : null
+  DTO.VaccinationDivertName = payload.VaccinationDivert ? payload.VaccinationDivert.divertName : null
+  DTO.VaccinationDoseId = payload.VaccinationDose ? parseInt(payload.VaccinationDose.doseId) : null
+  DTO.VaccinationDoseName = payload.VaccinationDose ? payload.VaccinationDose.doseName : null
+  DTO.VaccinationInjectionId = payload.VaccinationInjection ? parseInt(payload.VaccinationInjection.injectionId) : null
+  DTO.VaccinationInjectionName = payload.VaccinationInjection ? payload.VaccinationInjection.injectionName : null
+  DTO.VaccinationSerial = payload.VaccinationSerial || null
+  DTO.VaccinationNotation = payload.VaccinationNotation || null
+  return DTO
+}
+
 const prepareDataForUpdate = (state) => {
   const card = state.patientCard
   card.CardNumber = parseInt(card.CardNumber)
@@ -430,5 +448,63 @@ export const getVaccinationOptionsAction = async ({commit }) => {
     }
   }catch (e) {
     console.log(e.response)
+  }
+}
+
+export const createVaccinationAction = async ({commit}, payload) => {
+  try {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const DTO = prepareVaccinationDTO(payload)
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      return await axios.post(`${apiUrl}/api/v1/vaccination`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }else {
+      const DTO = prepareVaccinationDTO(payload)
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      return await axios.post(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }
+  }catch (e) {
+    console.log(e)
+  }
+}
+
+export const updateVaccinationAction = async ({commit}, payload) => {
+  try {
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const DTO = prepareVaccinationDTO(payload)
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      return await axios.put(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }else {
+      const DTO = prepareVaccinationDTO(payload)
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      return await axios.put(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+    }
+  }catch (e) {
+    console.log(e)
+  }
+}
+
+export const deleteVaccinationAction = async ({commit}, ids) => {
+  try{
+    const currentRefreshToken = localStorage.getItem('RefreshToken')
+    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
+    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTimePlus15 = currentTime + 15
+    if (accessTokenExpTime <= currentTimePlus15) {
+      const currentAccessToken = await doRefresh(currentRefreshToken)
+      return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data: ids })
+    }else {
+      const currentAccessToken = sessionStorage.getItem('JWT')
+      return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data:  ids })
+    }
+  }catch (e) {
+    console.log(e)
   }
 }

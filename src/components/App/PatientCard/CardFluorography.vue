@@ -308,7 +308,6 @@ export default {
             }
         }
         const showFluorographyEditForm = (data) => {
-            console.log(data)
             showEditForm.value = !showEditForm.value
             DTO.PatientCardId = data.PatientCardId
             DTO.FluorographyId = data.FluorographyId
