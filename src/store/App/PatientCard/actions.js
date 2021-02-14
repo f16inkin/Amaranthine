@@ -5,7 +5,7 @@ const apiUrl = 'http://192.168.0.6'
 
 const prepareCardCreateDTO = (DTO) => {
   DTO.CardNumber = parseInt(DTO.CardNumber)
-  DTO.PolicyNumber = DTO.PolicyNumber.replace(/[^0-9]/gim, '')
+  DTO.PolicyNumber = DTO.PolicyNumber ? DTO.PolicyNumber.replace(/[^0-9]/gim, '') : null
   DTO.InsuranceCertificate = DTO.InsuranceCertificate.replace(/[^0-9]/gim, '')
   return DTO
 }
