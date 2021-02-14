@@ -197,7 +197,16 @@ export default {
       isLoading.value = true
       const result = await store.dispatch('card/createCardAction', { cardCreateDTO: cardCreateDTO })
       isLoading.value = false
-      router.push({name: 'get.card', params: {id: result.data.id}})
+        if (result.status === 201){
+            router.push({name: 'get.card', params: {id: result.data.id}})
+        }else if(result.status === 200){
+            displayModal.value = true
+           for (let key in result.data){
+               console.log(result.data[key])
+               let field = result.data[key]
+               cardCreateDTO[field] = 'ЗАПОЛНИТЕ ЭТО ПОЛЕ'
+           }
+        }
     }
     return {
       searchString,
