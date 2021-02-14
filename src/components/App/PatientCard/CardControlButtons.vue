@@ -93,10 +93,9 @@
                                 <label for="female">женский</label>
                             </div>
                         </div>
-
                         <div id="policy-block" class="p-col-6">
                             <div class="p-mb-2">
-                                <label for="policyNumber" class="p-text-bold">Номер полиса:<i style="color:red">*</i></label>
+                                <label for="policyNumber" class="p-text-bold">Номер полиса:</label>
                             </div>
                             <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">

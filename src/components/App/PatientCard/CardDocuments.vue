@@ -19,7 +19,7 @@
                         <span style="color: blue;">СНИЛС, ЕНП</span>
                     </template>
                     <div class="p-mb-2">
-                        <label class="p-text-bold">СНИЛС:<i style="color:red">*</i></label>
+                        <label class="p-text-bold">СНИЛС:</label>
                     </div>
                     <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
@@ -28,7 +28,7 @@
                         <InputText v-model="card.InsuranceCertificate" disabled/>
                     </div>
                     <div class="p-mb-2">
-                        <label class="p-text-bold">Единый номер полиса:<i style="color:red">*</i></label>
+                        <label class="p-text-bold">Единый номер полиса:</label>
                     </div>
                     <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
@@ -132,7 +132,7 @@
                     <InputMask id="insuranceCertificate" mask="999-999-999 99" v-model="card.InsuranceCertificate" placeholder="***-***-*** **"/>
                 </div>
                 <div class="p-mb-2">
-                    <label for="policyNumber" class="p-text-bold">Единый номер полиса:<i style="color:red">*</i></label>
+                    <label for="policyNumber" class="p-text-bold">Единый номер полиса:</label>
                 </div>
                 <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
