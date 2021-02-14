@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { doRefresh } from '../../../services/RefreshTokens'
-
-const apiUrl = 'http://192.168.0.6'
+import { getAccessToken } from '../../../services/AccessToken'
+import { apiUrl } from '../../../configs/configs'
 
 const prepareCardCreateDTO = (DTO) => {
   DTO.CardNumber = parseInt(DTO.CardNumber)
@@ -64,7 +63,7 @@ const prepareDataForUpdate = (state) => {
   return card
 }
 
-export const getCardAction = async ({ commit }, id) => {
+export const getCardAction1 = async ({ commit }, id) => {
   try {
     const currentRefreshToken = localStorage.getItem('RefreshToken')
     const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
@@ -111,31 +110,21 @@ export const getCardAction = async ({ commit }, id) => {
   }
 }
 
+export const getCardAction = async ({ commit }, id) => {
+    try {
+        const accessToken = await getAccessToken();
+        const card = await axios.get(`${apiUrl}/api/v1/cards/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
+        commit('GET_CARD', card.data)
+    } catch (e) {
+        console.log(e.response)
+    }
+}
+
 export const getCardsAction = async ({ commit }, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    console.clear()
-    console.log('Expires: ' + accessTokenExpTime)
-    console.log('Current: ' + currentTime)
-    console.log('Current minus 15s: ' + currentTimePlus15)
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const cards = await axios.get(`${apiUrl}/api/v1/search/cards`, { params: { searchString: payload.searchString, page: payload.page, offset: payload.offset }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const cards = await axios.get(`${apiUrl}/api/v1/search/cards`, { params: { searchString: payload.searchString, page: payload.page, offset: payload.offset }, headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_CARDS', cards.data)
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      console.clear()
-      console.log('Expires: ' + accessTokenExpTime)
-      console.log('Current: ' + currentTime)
-      console.log('Current minus 15s: ' + currentTimePlus15)
-      console.log('-----------------------')
-      console.log('Current Access Token ' + currentAccessToken)
-      const cards = await axios.get(`${apiUrl}/api/v1/search/cards`, { params: { searchString: payload.searchString, page: payload.page, offset: payload.offset }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_CARDS', cards.data)
-    }
   } catch (e) {
     /**
      * Вот здесь можно обрабатывать 400, 401 и тд коды
@@ -150,18 +139,9 @@ export const getCardsAction = async ({ commit }, payload) => {
 
 export const createCardAction = async ({ commit }, payload) => {
   try{
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    if (accessTokenExpTime <= currentTime) {
       const DTO = prepareCardCreateDTO(payload.cardCreateDTO)
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.post(`${apiUrl}/api/v1/cards`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }else {
-      const DTO = prepareCardCreateDTO(payload.cardCreateDTO)
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.post(`${apiUrl}/api/v1/cards`, JSON.stringify(payload.cardCreateDTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }
+      const accessToken = await getAccessToken()
+      return await axios.post(`${apiUrl}/api/v1/cards`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
@@ -169,26 +149,13 @@ export const createCardAction = async ({ commit }, payload) => {
 
 export const updateCardAction = async ({ commit, state }, id) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const accessToken = await getAccessToken()
       const card = prepareDataForUpdate(state)
       const cardId = { cardId: id }
-      await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), { headers: { Authorization: `Bearer ${accessToken}` } })
       // Необходимо сделать разблокировку карты для других пользователей
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
+      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'off' } })
       commit('UNBLOCK_CARD')
-    } else {
-      const card = prepareDataForUpdate(state)
-      const cardId = { cardId: id }
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      // Необходимо сделать разблокировку карты для других пользователей
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
-      commit('UNBLOCK_CARD')
-    }
   } catch (e) {
     console.log(e)
   }
@@ -196,18 +163,9 @@ export const updateCardAction = async ({ commit, state }, id) => {
 
 export const getDispositionsAction = async ({ commit }, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor((Date.now() / 1000) + 15)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const dispositions = await axios.get(`${apiUrl}/api/v1/search/${payload.endpoint}`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const dispositions = await axios.get(`${apiUrl}/api/v1/search/${payload.endpoint}`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_DISPOSITIONS', { dispositions: dispositions, disposition: payload.endpoint })
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const dispositions = await axios.get(`${apiUrl}/api/v1/search/${payload.endpoint}`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_DISPOSITIONS', { dispositions: dispositions.data, disposition: payload.endpoint })
-    }
   } catch (e) {
     console.log(e.response)
   }
@@ -223,18 +181,9 @@ export const clearDispositionsAction = ({ commit }, endpoint) => {
 
 export const getInsuranceCompaniesAction = async ({ commit }, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor((Date.now() / 1000) + 15)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const companies = await axios.get(`${apiUrl}/api/v1/search/insurance-companies`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const companies = await axios.get(`${apiUrl}/api/v1/search/insurance-companies`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_INSURANCE_COMPANIES', { companies: companies.data })
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const companies = await axios.get(`${apiUrl}/api/v1/search/insurance-companies`, { params: { searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_INSURANCE_COMPANIES', { companies: companies.data })
-    }
   } catch (e) {
     console.log(e.response)
   }
@@ -246,26 +195,13 @@ export const setInsuranceCompanyAction = ({ commit }, payload) => {
 
 export const getTalonAction = async ({ commit }, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor((Date.now() / 1000) + 15)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { responseType: 'blob', headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { responseType: 'blob', headers: { Authorization: `Bearer ${accessToken}` } })
       const blob = new Blob([response.data], { type: 'application/pdf' })
       const link = document.createElement('a')
       link.href = window.URL.createObjectURL(blob)
       link.download = 'Report.pdf'
       window.open(link, '_blank')
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { responseType: 'blob', headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      const blob = new Blob([response.data], { type: 'application/pdf' })
-      const link = document.createElement('a')
-      link.href = window.URL.createObjectURL(blob)
-      link.download = 'Report.pdf'
-      window.open(link, '_blank')
-    }
   } catch (e) {
     console.log(e.response)
   }
@@ -274,20 +210,10 @@ export const getTalonAction = async ({ commit }, payload) => {
 export const blockCardAction = async ({ commit }, cardId) => {
   try {
     const id = { cardId: cardId }
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const accountId = sessionStorage.getItem('AccountId')
-    const currentTime = Math.floor(Date.now() / 1000)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'on' } })
-      commit('BLOCK_CARD', accountId)
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'on' } })
-      commit('BLOCK_CARD', accountId)
-    }
-  } catch (e) {
+    const accessToken = await getAccessToken()
+    await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'on' } })
+    commit('BLOCK_CARD', accountId)
+  }catch (e) {
     console.log(e.response)
   }
 }
@@ -295,19 +221,9 @@ export const blockCardAction = async ({ commit }, cardId) => {
 export const unblockCardAction = async ({ commit }, cardId) => {
   try {
     const id = { cardId: cardId }
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const accountId = sessionStorage.getItem('AccountId')
-    const currentTime = Math.floor(Date.now() / 1000)
-    if (accessTokenExpTime <= currentTime) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
-      commit('UNBLOCK_CARD', accountId)
-    } else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${currentAccessToken}`, 'Switch-Card': 'off' } })
-      commit('UNBLOCK_CARD', accountId)
-    }
+    const accessToken = await getAccessToken()
+    await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'off' } })
+    commit('UNBLOCK_CARD', accountId)
   } catch (e) {
     console.log(e.response)
   }
@@ -315,19 +231,9 @@ export const unblockCardAction = async ({ commit }, cardId) => {
 
 export const getFluorographiesAction = async ( {commit }, id) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const fluorographies = await axios.get(`${apiUrl}/api/v1/fluorographies/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const fluorographies = await axios.get(`${apiUrl}/api/v1/fluorographies/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_FLUOROGRAPHIES', fluorographies.data)
-    }else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const fluorographies = await axios.get(`${apiUrl}/api/v1/fluorographies/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_FLUOROGRAPHIES', fluorographies.data)
-    }
   }catch (e) {
     console.log(e.response)
   }
@@ -335,19 +241,9 @@ export const getFluorographiesAction = async ( {commit }, id) => {
 
 export const getFluorographyOptionsAction = async ({commit }) => {
   try{
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const options = await axios.get(`${apiUrl}/api/v1/fluorography/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const options = await axios.get(`${apiUrl}/api/v1/fluorography/options`, { headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_FLUOROGRAPHY_OPTIONS', options.data)
-    }else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const options = await axios.get(`${apiUrl}/api/v1/fluorography/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_FLUOROGRAPHY_OPTIONS', options.data)
-    }
   }catch (e) {
     console.log(e.response)
   }
@@ -355,19 +251,9 @@ export const getFluorographyOptionsAction = async ({commit }) => {
 
 export const createFluorographyAction = async ({commit}, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
       const DTO = prepareFluorographyDTO(payload)
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }else {
-      const DTO = prepareFluorographyDTO(payload)
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }
+      const accessToken = await getAccessToken()
+      return await axios.post(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
@@ -375,19 +261,9 @@ export const createFluorographyAction = async ({commit}, payload) => {
 
 export const updateFluorographyAction = async ({commit}, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
       const DTO = prepareFluorographyDTO(payload)
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.put(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }else {
-      const DTO = prepareFluorographyDTO(payload)
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.put(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }
+      const accessToken = await getAccessToken()
+      return await axios.put(`${apiUrl}/api/v1/fluorographies`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
@@ -395,17 +271,8 @@ export const updateFluorographyAction = async ({commit}, payload) => {
 
 export const deleteFluorographyAction = async ({commit}, ids) => {
     try{
-        const currentRefreshToken = localStorage.getItem('RefreshToken')
-        const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-        const currentTime = Math.floor(Date.now() / 1000)
-        const currentTimePlus15 = currentTime + 15
-        if (accessTokenExpTime <= currentTimePlus15) {
-            const currentAccessToken = await doRefresh(currentRefreshToken)
-            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data: ids })
-        }else {
-            const currentAccessToken = sessionStorage.getItem('JWT')
-            return await axios.delete(`${apiUrl}/api/v1/fluorographies`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data:  ids })
-        }
+        const accessToken = await getAccessToken()
+        return await axios.delete(`${apiUrl}/api/v1/fluorographies`, { headers: { Authorization: `Bearer ${accessToken}` }, data: ids })
     }catch (e) {
       console.log(e)
     }
@@ -413,19 +280,9 @@ export const deleteFluorographyAction = async ({commit}, ids) => {
 
 export const getVaccinationsAction = async ( {commit }, id) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const vaccinations = await axios.get(`${apiUrl}/api/v1/vaccinations/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const vaccinations = await axios.get(`${apiUrl}/api/v1/vaccinations/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_VACCINATIONS', vaccinations.data)
-    }else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const vaccinations = await axios.get(`${apiUrl}/api/v1/vaccinations/${id}`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_VACCINATIONS', vaccinations.data)
-    }
   }catch (e) {
     console.log(e.response)
   }
@@ -433,19 +290,9 @@ export const getVaccinationsAction = async ( {commit }, id) => {
 
 export const getVaccinationOptionsAction = async ({commit }) => {
   try{
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      const options = await axios.get(`${apiUrl}/api/v1/vaccination/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
+      const accessToken = await getAccessToken()
+      const options = await axios.get(`${apiUrl}/api/v1/vaccination/options`, { headers: { Authorization: `Bearer ${accessToken}` } })
       commit('GET_VACCINATION_OPTIONS', options.data)
-    }else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      const options = await axios.get(`${apiUrl}/api/v1/vaccination/options`, { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-      commit('GET_VACCINATION_OPTIONS', options.data)
-    }
   }catch (e) {
     console.log(e.response)
   }
@@ -453,19 +300,9 @@ export const getVaccinationOptionsAction = async ({commit }) => {
 
 export const createVaccinationAction = async ({commit}, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
       const DTO = prepareVaccinationDTO(payload)
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.post(`${apiUrl}/api/v1/vaccination`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }else {
-      const DTO = prepareVaccinationDTO(payload)
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.post(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }
+      const accessToken = await getAccessToken()
+      return await axios.post(`${apiUrl}/api/v1/vaccination`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
@@ -473,19 +310,9 @@ export const createVaccinationAction = async ({commit}, payload) => {
 
 export const updateVaccinationAction = async ({commit}, payload) => {
   try {
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
       const DTO = prepareVaccinationDTO(payload)
-      const currentAccessToken = await doRefresh(currentRefreshToken)
-      return await axios.put(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }else {
-      const DTO = prepareVaccinationDTO(payload)
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.put(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${currentAccessToken}` } })
-    }
+      const accessToken = await getAccessToken()
+      return await axios.put(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
@@ -493,17 +320,8 @@ export const updateVaccinationAction = async ({commit}, payload) => {
 
 export const deleteVaccinationAction = async ({commit}, ids) => {
   try{
-    const currentRefreshToken = localStorage.getItem('RefreshToken')
-    const accessTokenExpTime = sessionStorage.getItem('JWTExpTime')
-    const currentTime = Math.floor(Date.now() / 1000)
-    const currentTimePlus15 = currentTime + 15
-    if (accessTokenExpTime <= currentTimePlus15) {
-      const currentAccessToken = await doRefresh(currentRefreshToken)
+      const accessToken = await getAccessToken()
       return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data: ids })
-    }else {
-      const currentAccessToken = sessionStorage.getItem('JWT')
-      return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data:  ids })
-    }
   }catch (e) {
     console.log(e)
   }

@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-const apiUrl = 'http://192.168.0.6'
+import { apiUrl } from '../configs/configs'
 
 const fillStorage = (payload, accessToken, refreshToken) => {
   return new Promise((resolve, reject) => {

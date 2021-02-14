@@ -23,12 +23,12 @@
 
 <script>
 import axios from 'axios'
+import { apiUrl} from '../../configs/configs'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
   name: 'Auth',
   setup () {
-    const apiUrl = 'http://192.168.0.6'
     const router = useRouter()
     const userName = ref('')
     const userPassword = ref('')
