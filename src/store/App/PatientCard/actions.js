@@ -212,9 +212,9 @@ export const blockCardAction = async ({ commit }, cardId) => {
     const id = { cardId: cardId }
     const accessToken = await getAccessToken()
     await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'on' } })
-    commit('BLOCK_CARD', accountId)
+    commit('BLOCK_CARD', sessionStorage.getItem('AccountId'))
   }catch (e) {
-    console.log(e.response)
+    console.log(e)
   }
 }
 
@@ -223,9 +223,9 @@ export const unblockCardAction = async ({ commit }, cardId) => {
     const id = { cardId: cardId }
     const accessToken = await getAccessToken()
     await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'off' } })
-    commit('UNBLOCK_CARD', accountId)
+    commit('UNBLOCK_CARD')
   } catch (e) {
-    console.log(e.response)
+    console.log(e)
   }
 }
 
