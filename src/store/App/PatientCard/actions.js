@@ -302,7 +302,7 @@ export const createVaccinationAction = async ({commit}, payload) => {
   try {
       const DTO = prepareVaccinationDTO(payload)
       const accessToken = await getAccessToken()
-      return await axios.post(`${apiUrl}/api/v1/vaccination`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
+      return await axios.post(`${apiUrl}/api/v1/vaccinations`, JSON.stringify(DTO), { headers: { Authorization: `Bearer ${accessToken}` } })
   }catch (e) {
     console.log(e)
   }
