@@ -36,7 +36,8 @@ export const GET_CARDS = (state, cards) => {
 }
 
 export const GET_DISPOSITIONS = (state, payload) => {
-  state.dispositions[payload.disposition] = payload.dispositions
+  console.log(payload)
+  state.dispositions[payload.disposition] = payload.dispositions.data
 }
 
 export const SET_DISPOSITION = (state, payload) => {
