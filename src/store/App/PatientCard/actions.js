@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { getAccessToken } from '../../../services/AccessToken'
-import { apiUrl } from '../../../configs/configs'
+import { getAccessToken } from '@/services/AccessToken'
+import { apiUrl } from '@/configs/configs'
 
 const prepareCardCreateDTO = (DTO) => {
   DTO.CardNumber = parseInt(DTO.CardNumber)

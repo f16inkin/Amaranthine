@@ -190,7 +190,6 @@ export default {
       PolicyNumber: null,
       InsuranceCertificate: null
     })
-
     const genders = { male: 1, female: 2 }
     const createCard = async () => {
       displayModal.value = false
@@ -198,6 +197,7 @@ export default {
       const result = await store.dispatch('card/createCardAction', { cardCreateDTO: cardCreateDTO })
       isLoading.value = false
       router.push({name: 'get.card', params: {id: result.data.id}})
+      store.dispatch('card/getCardAction', result.data.id)
     }
     return {
       searchString,
