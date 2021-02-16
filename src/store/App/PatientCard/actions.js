@@ -321,7 +321,7 @@ export const updateVaccinationAction = async ({commit}, payload) => {
 export const deleteVaccinationAction = async ({commit}, ids) => {
   try{
       const accessToken = await getAccessToken()
-      return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${currentAccessToken}` }, data: ids })
+      return await axios.delete(`${apiUrl}/api/v1/vaccinations`, { headers: { Authorization: `Bearer ${accessToken}` }, data: ids })
   }catch (e) {
     console.log(e)
   }
