@@ -2,6 +2,8 @@
     <div id="controls" class="p-col-12">
         <Toolbar class="p-p-1">
             <template #left>
+                <Button label="Норма x1" icon="pi pi-plus" class="p-button-primary p-mr-2 p-button-sm" @click="add25NormalRecord(1)"/>
+                <Button label="Норма x2" icon="pi pi-plus" class="p-button-primary p-mr-2 p-button-sm" @click="add25NormalRecord(2)"/>
                 <Button label="Добавить" icon="pi pi-plus" class="p-button-success p-mr-2 p-button-sm" @click="showFluorographyCreationForm"/>
             </template>
         </Toolbar>
@@ -307,6 +309,26 @@ export default {
                 showCreationForm.value = true
             }
         }
+        const add25NormalRecord = async (snapshot) => {
+            let quickDTO = {
+                PatientCardId: '00026732-601f-4201-b452-59db07967f87',//card.value.CardId,
+                FluorographyId: null,
+                FluorographyDate: (new Date).toISOString().split('T')[0],
+                FluorographyNumber: null,
+                FluorographyType: { typeId: 1 },
+                FluorographyResult: { resultId: 25 },
+                FluorographySender: null,
+                FluorographyDose: null,
+                FluorographySnapshot: snapshot,
+                FluorographyNotation: null
+            }
+            isLoading.value = true
+            const result = await store.dispatch('card/createFluorographyAction', quickDTO)
+            if (result.status === 201){
+                await store.dispatch('card/getFluorographiesAction',  route.params.id)
+                setTimeout(() => {isLoading.value = false}, 100)
+            }
+        }
         const showFluorographyEditForm = (data) => {
             showEditForm.value = !showEditForm.value
             DTO.PatientCardId = data.PatientCardId
@@ -354,7 +376,8 @@ export default {
             showFluorographyEditForm,
             createRecord,
             saveRecord,
-            deleteRecord
+            deleteRecord,
+            add25NormalRecord
         }
     }
 }
