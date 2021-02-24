@@ -289,6 +289,12 @@ export default {
         const formatDate = (date) => {
             return date.split(".").reverse().join("-");
         }
+        const formatDateForDB = (date) => {
+          let dd = String(date.getDate()).padStart(2, '0');
+          let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+          let yyyy = date.getFullYear();
+          return  yyyy + '-' + mm + '-' + dd;
+        }
         const showCreationForm = ref(false)
         const showEditForm = ref(false)
         const isLoading = ref(false)
@@ -313,7 +319,7 @@ export default {
             let quickDTO = {
                 PatientCardId: '00026732-601f-4201-b452-59db07967f87',//card.value.CardId,
                 FluorographyId: null,
-                FluorographyDate: (new Date).toISOString().split('T')[0],
+                FluorographyDate: formatDateForDB(new Date),//(new Date).toISOString().split('T')[0],
                 FluorographyNumber: null,
                 FluorographyType: { typeId: 1 },
                 FluorographyResult: { resultId: 25 },
