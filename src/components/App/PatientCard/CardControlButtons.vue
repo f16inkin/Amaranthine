@@ -4,14 +4,12 @@
             <Toolbar class="p-p-1">
                 <template #left>
                     <Button label="Новая карта" icon="pi pi-plus" class="p-mr-2 p-button-sm" @click="showCardCreationForm"/>
-
                     <transition name="fade">
                         <div v-show="isBlocked">
                             <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" @click="unblockCard"/>
                         </div>
                     </transition>
-                    <Button label="Печать талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon"/>
-
+                    <Button label="Печать амбулаторного талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon('ambulatory')"/>
                 </template>
                 <template #right>
                     <div class="p-inputgroup">
@@ -171,10 +169,16 @@ export default {
     const unblockCard = () => {
       store.dispatch('card/unblockCardAction', card.value.CardId)
     }
-    const printTalon = async () => {
-      const talon = 'ambulatory'
+    const printTalon = async (talon, pdfFormat, marginLeft, marginRight, marginTop, marginBottom) => {
+      const configs = {
+        format: pdfFormat || 'A5-P',
+        margin_left: marginLeft || 5,
+        margin_right: marginRight || 5,
+        margin_top: marginTop || 5,
+        margin_bottom: marginBottom || 5,
+      }
       isLoading.value = true
-      await store.dispatch('card/getTalonAction', { talon: talon, id: route.params.id })
+      await store.dispatch('card/getTalonAction', { talon: talon, configs: configs.value,id: route.params.id })
       isLoading.value = false
     }
     /**
