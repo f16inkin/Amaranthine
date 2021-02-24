@@ -129,3 +129,7 @@ export const GET_VACCINATIONS = (state, vaccinations) => {
 export const GET_VACCINATION_OPTIONS = (state, options) => {
     state.vaccinationOptions = options
 }
+
+export const GET_ADDRESSES = (state, addresses) => {
+    state.patientCardAddresses = addresses
+}

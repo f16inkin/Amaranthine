@@ -53,6 +53,7 @@ export default {
     const store = useStore()
     const route = useRoute()
     const card = computed(() => store.state.card.patientCard)
+    const addresses = computed(() => store.state.card.patientCardAddresses)
     const sections = [
       { name: 'Карта', icon: '', value: 'CardMain' },
       { name: 'Флюорография', icon: '', value: 'CardFluorography' },
@@ -60,6 +61,8 @@ export default {
     ]
     const currentSection = ref(sections[0])
     store.dispatch('card/getCardAction', route.params.id)
+    store.dispatch('card/getAddressesAction', route.params.id)
+      console.log(store.state.card)
     return {
       sections,
       currentSection,

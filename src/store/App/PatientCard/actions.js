@@ -50,10 +50,10 @@ const prepareDataForUpdate = (state) => {
   const card = state.patientCard
   card.CardNumber = parseInt(card.CardNumber)
   card.InsuranceCompanyId = parseInt(card.InsuranceCompanyId) || null
-  card.RegionId = parseInt(card.RegionId) || null
-  card.DistrictId = parseInt(card.DistrictId) || null
-  card.LocalityId = parseInt(card.LocalityId) || null
-  card.StreetId = parseInt(card.StreetId) || null
+  //card.RegionId = parseInt(card.RegionId) || null
+  //card.DistrictId = parseInt(card.DistrictId) || null
+  //card.LocalityId = parseInt(card.LocalityId) || null
+  //card.StreetId = parseInt(card.StreetId) || null
   // Либо дата есть, либо она отсутсвует. Форматирование для коректной отправки на сервер
   card.PassportDateOfIssue = card.PassportDateOfIssue || null
   card.BirthCertificateDateOfIssue = card.BirthCertificateDateOfIssue || null
@@ -196,7 +196,7 @@ export const setInsuranceCompanyAction = ({ commit }, payload) => {
 export const getTalonAction = async ({ commit }, payload) => {
   try {
       const accessToken = await getAccessToken()
-      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { responseType: 'blob', headers: { Authorization: `Bearer ${accessToken}` } })
+      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { params: JSON.stringify(payload.configs), responseType: 'blob', headers: { Authorization: `Bearer ${accessToken}` } })
       const blob = new Blob([response.data], { type: 'application/pdf' })
       const link = document.createElement('a')
       link.href = window.URL.createObjectURL(blob)
@@ -325,4 +325,14 @@ export const deleteVaccinationAction = async ({commit}, ids) => {
   }catch (e) {
     console.log(e)
   }
+}
+
+export const getAddressesAction = async ({ commit }, id) => {
+    try {
+        const accessToken = await getAccessToken();
+        const addresses = await axios.get(`${apiUrl}/api/v1/addresses/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
+        commit('GET_ADDRESSES', addresses.data)
+    } catch (e) {
+        console.log(e.response)
+    }
 }

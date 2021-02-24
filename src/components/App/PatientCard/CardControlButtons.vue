@@ -9,7 +9,8 @@
                             <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" @click="unblockCard"/>
                         </div>
                     </transition>
-                    <Button label="Печать амбулаторного талона" icon="pi pi-print" class="p-mr-2 p-button-sm" @click="printTalon('ambulatory')"/>
+                    <Button label="Амбулаторный" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('ambulatory')"/>
+                    <Button label="Стоматологический" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('dentist')"/>
                 </template>
                 <template #right>
                     <div class="p-inputgroup">
@@ -178,7 +179,7 @@ export default {
         margin_bottom: marginBottom || 5,
       }
       isLoading.value = true
-      await store.dispatch('card/getTalonAction', { talon: talon, configs: configs.value,id: route.params.id })
+      await store.dispatch('card/getTalonAction', { talon: talon, configs: configs, id: route.params.id })
       isLoading.value = false
     }
     /**
