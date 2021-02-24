@@ -317,7 +317,7 @@ export default {
         }
         const add25NormalRecord = async (snapshot) => {
             let quickDTO = {
-                PatientCardId: '00026732-601f-4201-b452-59db07967f87',//card.value.CardId,
+                PatientCardId: card.value.CardId,
                 FluorographyId: null,
                 FluorographyDate: formatDateForDB(new Date),//(new Date).toISOString().split('T')[0],
                 FluorographyNumber: null,
