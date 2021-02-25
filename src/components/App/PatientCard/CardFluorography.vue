@@ -6,6 +6,9 @@
                 <Button label="Норма x2" icon="pi pi-plus" class="p-button-primary p-mr-2 p-button-sm" @click="add25NormalRecord(2)"/>
                 <Button label="Добавить" icon="pi pi-plus" class="p-button-success p-mr-2 p-button-sm" @click="showFluorographyCreationForm"/>
             </template>
+            <template #right>
+                <Button label="Отчеты" icon="pi pi-file" class="p-button-help p-mr-2 p-button-sm" @click="showPastPatientsReportForm"/>
+            </template>
         </Toolbar>
     </div>
     <div id="data">
@@ -232,6 +235,40 @@
                 </template>
             </Dialog>
         </div>
+        <div id="fluorography-past-patients-report-dialog">
+            <Dialog v-model:visible="isPatientsReportFormVisible" :style="{width: '1600px'}" :modal="true">
+                <template #header>
+                    <b>Отчет по прошедшим пациентам</b>
+                </template>
+                <div class="p-grid">
+                    <div id="report-controls" class="p-col-12">
+                        <Toolbar  class="p-p-1">
+                            <template #left>
+                                <Button label="Отчет за сутки" icon="pi pi-book" class="p-button-primary p-mr-2 p-button-sm" @click="showPastPatientsReport"/>
+                            </template>
+                            <template #right>
+                                <div style="text-align: right">
+                                    За выбранный период пройдено пациентов: <Badge severity="help" :value="pastPatientsCount"></Badge>
+                                </div>
+                            </template>
+                        </Toolbar>
+                    </div>
+                    <div id="report-data">
+                        <DataTable :value="pastPatients.value" class="p-datatable-sm"
+                                   :paginator="true" :rows="10" :filters="filters"
+                                   paginatorTemplate="PrevPageLink PageLinks NextPageLink">
+                            <Column field="FluorographyDate" header="Дата" :sortable="true" headerStyle="width:10%; text-align:center;"  bodyStyle="text-align: center"/>
+                            <Column field="CardNumber" header="Номер карты" headerStyle="width:10%; text-align:center;"  bodyStyle="text-align: center"/>
+                            <Column field="Surname" header="Фамилия" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+                            <Column field="FirstName" header="Имя" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+                            <Column field="SecondName" header="Отчество" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+                            <Column field="FluorographySnapshot" header="Снимок" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+                            <Column field="FluorographyResult" header="Результат" headerStyle="width:15%; text-align:center;" bodyStyle="text-align: center"/>
+                        </DataTable>
+                    </div>
+                </div>
+            </Dialog>
+        </div>
         <div id="loader">
             <SpinPreloader v-show="isLoading"></SpinPreloader>
         </div>
@@ -250,10 +287,11 @@ import Dialog from 'primevue/components/dialog/Dialog'
 import InputText from 'primevue/components/inputtext/InputText'
 import Dropdown from 'primevue/components/dropdown/Dropdown'
 import Textarea from 'primevue/components/textarea/Textarea'
-import SpinPreloader from "../../Core/Preloaders/SpinPreloader";
+import SpinPreloader from '../../Core/Preloaders/SpinPreloader'
+import Badge from 'primevue/components/badge/Badge'
 export default {
   name: 'CardFluorography',
-  components: {SpinPreloader, Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
+  components: {Badge, SpinPreloader, Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
     setup (){
         const store = useStore()
         const route = useRoute()
@@ -297,6 +335,7 @@ export default {
         }
         const showCreationForm = ref(false)
         const showEditForm = ref(false)
+        const isPatientsReportFormVisible = ref(false)
         const isLoading = ref(false)
         const filters = {}
         const showFluorographyCreationForm = () => {
@@ -370,6 +409,20 @@ export default {
                 console.log('Fluorography hasn\'t deleted')
             }
         }
+        const pastPatientsCount = ref('0')
+        const pastPatients = reactive({})
+        const showPastPatientsReportForm = () => {
+            isPatientsReportFormVisible.value = !isPatientsReportFormVisible.value
+        }
+        const showPastPatientsReport = async() => {
+            let dateStart = formatDateForDB(new Date())
+            let dateFinish = formatDateForDB(new Date())
+            const result = await store.dispatch('card/getPastPatientsAction', {dateStart: dateStart, dateFinish: dateFinish})
+            if (result.status === 200){
+                pastPatients.value = result.data
+                pastPatientsCount.value = result.data.length
+            }
+        }
         return {
             filters,
             fluorographies,
@@ -377,13 +430,18 @@ export default {
             DTO,
             showCreationForm,
             showEditForm,
+            isPatientsReportFormVisible,
             isLoading,
+            pastPatientsCount,
+            pastPatients,
             showFluorographyCreationForm,
             showFluorographyEditForm,
             createRecord,
             saveRecord,
             deleteRecord,
-            add25NormalRecord
+            add25NormalRecord,
+            showPastPatientsReportForm,
+            showPastPatientsReport
         }
     }
 }

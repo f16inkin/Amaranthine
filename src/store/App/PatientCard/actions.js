@@ -50,10 +50,6 @@ const prepareDataForUpdate = (state) => {
   const card = state.patientCard
   card.CardNumber = parseInt(card.CardNumber)
   card.InsuranceCompanyId = parseInt(card.InsuranceCompanyId) || null
-  //card.RegionId = parseInt(card.RegionId) || null
-  //card.DistrictId = parseInt(card.DistrictId) || null
-  //card.LocalityId = parseInt(card.LocalityId) || null
-  //card.StreetId = parseInt(card.StreetId) || null
   // Либо дата есть, либо она отсутсвует. Форматирование для коректной отправки на сервер
   card.PassportDateOfIssue = card.PassportDateOfIssue || null
   card.BirthCertificateDateOfIssue = card.BirthCertificateDateOfIssue || null
@@ -335,4 +331,9 @@ export const getAddressesAction = async ({ commit }, id) => {
     } catch (e) {
         console.log(e.response)
     }
+}
+
+export const getPastPatientsAction = async ({ commit }, payload) => {
+    const accessToken = await getAccessToken();
+    return await axios.get(`${apiUrl}/api/v1/report/fluorography/past-patients`, { params: JSON.stringify(payload), headers: { Authorization: `Bearer ${accessToken}` }})
 }
