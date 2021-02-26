@@ -421,6 +421,9 @@ export default {
             if (result.status === 200){
                 pastPatients.value = result.data
                 pastPatientsCount.value = result.data.length
+            }else{
+              pastPatientsCount.value = '0';
+              pastPatients.value = {}
             }
         }
         return {
