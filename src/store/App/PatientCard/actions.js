@@ -55,6 +55,7 @@ const prepareDataForUpdate = (state) => {
   card.BirthCertificateDateOfIssue = card.BirthCertificateDateOfIssue || null
   // Подготовка номера полиса, СНИЛС к отправке в БД
   card.PolicyNumber = card.PolicyNumber.replace(/[^0-9]/gim, '')
+  card.TemporaryPolicyNumber = card.TemporaryPolicyNumber.replace(/[^0-9]/gim, '')
   card.InsuranceCertificate = card.InsuranceCertificate.replace(/[^0-9]/gim, '')
   return card
 }

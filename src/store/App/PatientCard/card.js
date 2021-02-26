@@ -5,7 +5,7 @@ const state = {
   count: 1,
   currentView: 'Card',
   patientCard: {
-    CardId: null,
+    /*CardId: null,
     CardNumber: null,
     Surname: null,
     FirstName: null,
@@ -31,7 +31,7 @@ const state = {
     Workplace: null,
     Profession: null,
     Notation: null,
-    Owner: null
+    Owner: null*/
   },
   patientCardAddresses: [],
   patientCards: {

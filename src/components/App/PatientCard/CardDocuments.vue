@@ -27,14 +27,29 @@
                             </span>
                         <InputText v-model="card.InsuranceCertificate" disabled/>
                     </div>
-                    <div class="p-mb-2">
-                        <label class="p-text-bold">Единый номер полиса:</label>
-                    </div>
-                    <div class="p-inputgroup">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Единый номер полиса:</label>
+                            </div>
+                            <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                        <InputText v-model="card.PolicyNumber" disabled/>
+                                <InputText v-model="card.PolicyNumber" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Временный полис:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                                <span class="p-inputgroup-addon">
+                                <i class="pi pi-id-card"></i>
+                                </span>
+                                <InputText v-model="card.TemporaryPolicyNumber" disabled/>
+                            </div>
+                        </div>
                     </div>
                     <div class="p-mb-2">
                         <label class="p-text-bold">Страховая компания:</label>
@@ -131,14 +146,29 @@
                             </span>
                     <InputMask id="insuranceCertificate" mask="999-999-999 99" v-model="card.InsuranceCertificate" placeholder="***-***-*** **"/>
                 </div>
-                <div class="p-mb-2">
-                    <label for="policyNumber" class="p-text-bold">Единый номер полиса:</label>
-                </div>
-                <div class="p-inputgroup">
+                <div class="p-grid">
+                    <div class="p-col-6">
+                        <div class="p-mb-2">
+                            <label for="policyNumber" class="p-text-bold">Единый номер полиса:</label>
+                        </div>
+                        <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                    <InputMask id="policyNumber" mask="9999-9999-9999-9999" v-model="card.PolicyNumber" placeholder="****-****-****-****"/>
+                            <InputMask id="policyNumber" mask="9999-9999-9999-9999" v-model="card.PolicyNumber" placeholder="****-****-****-****"/>
+                        </div>
+                    </div>
+                    <div class="p-col-6">
+                        <div class="p-mb-2">
+                            <label for="temporaryPolicyNumber" class="p-text-bold">Временный полис:</label>
+                        </div>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                            <InputMask id="temporaryPolicyNumber" mask="999-999-999" v-model="card.TemporaryPolicyNumber" placeholder="***-***-***"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="p-mb-2">
                     <label for="insuranceCompany" class="p-text-bold">Страховая компания:</label>
