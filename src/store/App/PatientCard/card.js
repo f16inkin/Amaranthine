@@ -33,7 +33,24 @@ const state = {
     Notation: null,
     Owner: null*/
   },
-  patientCardAddresses: [],
+  patientCardAddresses: {
+    ResidenceAddress : {
+      AddressId: null,
+      PatientCardId: null,
+      AddressTypeId: '6a5e1644-c192-4e6d-bc08-3be8ee6e9754',
+      AddressTypeName: null,
+      RegionId: null,
+      RegionName: null,
+      DistrictId: null,
+      DistrictName: null,
+      LocalityId: null,
+      LocalityName: null,
+      StreetId: null,
+      StreetName: null,
+      HouseNumber: null,
+      Apartment: null
+    }
+  },
   patientCards: {
     Cards: [],
     PagesCounts: 0,

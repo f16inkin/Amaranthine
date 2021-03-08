@@ -339,22 +339,33 @@ export const deleteVaccinationAction = async ({commit}, ids) => {
 export const getAddressesAction = async ({ commit }, id) => {
     try {
         const accessToken = await getAccessToken();
-        const addresses = await axios.get(`${apiUrl}/api/v1/addresses/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
-        commit('GET_ADDRESSES', addresses.data)
+        const result = await axios.get(`${apiUrl}/api/v1/addresses/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
+        if (result.status === 200){
+            commit('GET_ADDRESSES', result.data)
+        }
     } catch (e) {
         console.log(e.response)
+    }
+}
+
+export const createAddressesAction = async ({ commit }, payload) => {
+    try {
+        const accessToken = await getAccessToken()
+        const result =  await axios.post(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
+        if (result.status === 201){
+            payload.AddressId = result.data
+            commit('UPDATE_ADDRESSES', payload)
+        }
+    } catch (e) {
+        console.log(e)
     }
 }
 
 export const updateAddressesAction = async ({ commit }, payload) => {
     try {
         const accessToken = await getAccessToken()
-        console.log(payload)
-        if (payload.AddressId !==null){
-            await axios.put(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
-        }else {
-            await axios.post(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
-        }
+        const result = await axios.put(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
+        commit('UPDATE_ADDRESSES', payload)
     } catch (e) {
         console.log(e)
     }
