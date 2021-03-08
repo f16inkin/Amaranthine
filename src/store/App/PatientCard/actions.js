@@ -193,7 +193,7 @@ export const setInsuranceCompanyAction = ({ commit }, payload) => {
 export const getTalonAction = async ({ commit }, payload) => {
   try {
       const accessToken = await getAccessToken()
-      const response = await axios.get(`${apiUrl}/api/v1/talons/${payload.talon}/${payload.id}`, { params: JSON.stringify(payload.configs), responseType: 'blob', headers: { Authorization: `Bearer ${accessToken}` } })
+      const response = await axios.get(`${apiUrl}/api/v1/documents/forms/${payload.id}`, { params: JSON.stringify(payload.formName), responseType: 'blob', headers: { Authorization: `Bearer ${accessToken}` } })
       const blob = new Blob([response.data], { type: 'application/pdf' })
       const link = document.createElement('a')
       link.href = window.URL.createObjectURL(blob)
@@ -225,6 +225,10 @@ export const unblockCardAction = async ({ commit }, cardId) => {
     console.log(e)
   }
 }
+
+/**
+ * Флюорография
+ */
 
 export const getFluorographiesAction = async ( {commit }, id) => {
   try {
@@ -275,6 +279,10 @@ export const deleteFluorographyAction = async ({commit}, ids) => {
     }
 }
 
+/**
+ * Прививки
+ */
+
 export const getVaccinationsAction = async ( {commit }, id) => {
   try {
       const accessToken = await getAccessToken()
@@ -324,6 +332,10 @@ export const deleteVaccinationAction = async ({commit}, ids) => {
   }
 }
 
+/**
+ * Адреса
+ */
+
 export const getAddressesAction = async ({ commit }, id) => {
     try {
         const accessToken = await getAccessToken();
@@ -333,6 +345,34 @@ export const getAddressesAction = async ({ commit }, id) => {
         console.log(e.response)
     }
 }
+
+export const updateAddressesAction = async ({ commit }, payload) => {
+    try {
+        const accessToken = await getAccessToken()
+        console.log(payload)
+        if (payload.AddressId !==null){
+            await axios.put(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
+        }else {
+            await axios.post(`${apiUrl}/api/v1/addresses`, JSON.stringify(payload), { headers: { Authorization: `Bearer ${accessToken}` } })
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const searchAddressAction = async ({ commit }, payload) => {
+    try {
+        const accessToken = await getAccessToken();
+        const addresses = await axios.get(`${apiUrl}/api/v1/addresses/search`, { params: {target: payload.target, searchString: payload.searchString, limit: payload.limit }, headers: { Authorization: `Bearer ${accessToken}` } })
+        return addresses.data
+    } catch (e) {
+        console.log(e.response)
+    }
+}
+
+/**
+ * Отчеты
+ */
 
 export const getPastPatientsAction = async ({ commit }, payload) => {
     const accessToken = await getAccessToken();

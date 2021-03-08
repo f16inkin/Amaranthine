@@ -9,8 +9,9 @@
                             <Button label="Разблокировать" icon="pi pi-lock-open" class="p-mr-2 p-button-sm" @click="unblockCard"/>
                         </div>
                     </transition>
-                    <Button label="Амбулаторный" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('ambulatory')"/>
-                    <Button label="Стоматологический" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('dentist')"/>
+                    <Button label="Амбулаторный" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('ambulatory.talon')"/>
+                    <Button label="Стоматологический" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-info" @click="printTalon('dentist.talon')"/>
+                    <Button label="Карта" icon="pi pi-print" class="p-mr-2 p-button-sm p-button-help" @click="printTalon('ambulatory.card.cover')"/>
                 </template>
                 <template #right>
                     <div class="p-inputgroup">
@@ -170,16 +171,9 @@ export default {
     const unblockCard = () => {
       store.dispatch('card/unblockCardAction', card.value.CardId)
     }
-    const printTalon = async (talon, pdfFormat, marginLeft, marginRight, marginTop, marginBottom) => {
-      const configs = {
-        format: pdfFormat || 'A5-P',
-        margin_left: marginLeft || 5,
-        margin_right: marginRight || 5,
-        margin_top: marginTop || 5,
-        margin_bottom: marginBottom || 5,
-      }
+    const printTalon = async (formName) => {
       isLoading.value = true
-      await store.dispatch('card/getTalonAction', { talon: talon, configs: configs, id: route.params.id })
+      await store.dispatch('card/getTalonAction', { formName: formName, id: route.params.id })
       isLoading.value = false
     }
     /**
