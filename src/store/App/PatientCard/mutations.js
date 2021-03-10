@@ -49,45 +49,17 @@ export const SET_DISPOSITION = (state, payload) => {
   state.dispositions.streets = []
 }
 
-export const CLEAR_DISPOSITIONS = (state, endpoint) => {
-    switch (endpoint) {
-        case 'regions' :
-            state.patientCard.RegionId = null
-            state.patientCard.RegionName = ''
-            state.patientCard.DistrictId = null
-            state.patientCard.DistrictName = ''
-            state.patientCard.LocalityId = null
-            state.patientCard.LocalityName = ''
-            state.patientCard.StreetId = null
-            state.patientCard.StreetName = ''
-            state.patientCard.HouseNumber = ''
-            state.patientCard.Apartment = ''
-        break;
-        case 'districts' :
-            state.patientCard.DistrictId = null
-            state.patientCard.DistrictName = ''
-            state.patientCard.LocalityId = null
-            state.patientCard.LocalityName = ''
-            state.patientCard.StreetId = null
-            state.patientCard.StreetName = ''
-            state.patientCard.HouseNumber = ''
-            state.patientCard.Apartment = ''
-        break;
-        case 'localities' :
-            state.patientCard.LocalityId = null
-            state.patientCard.LocalityName = ''
-            state.patientCard.StreetId = null
-            state.patientCard.StreetName = ''
-            state.patientCard.HouseNumber = null
-            state.patientCard.Apartment = null
-            break;
-        case 'streets' :
-            state.patientCard.StreetId = null
-            state.patientCard.StreetId = ''
-            state.patientCard.HouseNumber = null
-            state.patientCard.Apartment = null
-            break;
-    }
+export const CLEAR_DISPOSITIONS = (state) => {
+    state.patientCardAddresses.ResidenceAddress.RegionId = null
+    state.patientCardAddresses.ResidenceAddress.RegionName = null
+    state.patientCardAddresses.ResidenceAddress.DistrictId = null
+    state.patientCardAddresses.ResidenceAddress.DistrictName = null
+    state.patientCardAddresses.ResidenceAddress.LocalityId = null
+    state.patientCardAddresses.ResidenceAddress.LocalityName = null
+    state.patientCardAddresses.ResidenceAddress.StreetId = null
+    state.patientCardAddresses.ResidenceAddress.StreetName = null
+    state.patientCardAddresses.ResidenceAddress.HouseNumber = null
+    state.patientCardAddresses.ResidenceAddress.Apartment = null
 }
 
 export const GET_INSURANCE_COMPANIES = (state, payload) => {

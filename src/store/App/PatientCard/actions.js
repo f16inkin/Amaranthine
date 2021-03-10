@@ -149,10 +149,12 @@ export const updateCardAction = async ({ commit, state }, id) => {
       const accessToken = await getAccessToken()
       const card = prepareDataForUpdate(state)
       const cardId = { cardId: id }
-      await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), { headers: { Authorization: `Bearer ${accessToken}` } })
+      const result = await axios.put(`${apiUrl}/api/v1/cards`, JSON.stringify(card), { headers: { Authorization: `Bearer ${accessToken}` } })
       // Необходимо сделать разблокировку карты для других пользователей
       await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(cardId), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'off' } })
       commit('UNBLOCK_CARD')
+      // Вполне можно вернуть ответ клиенту
+      return result
   } catch (e) {
     console.log(e)
   }
@@ -172,8 +174,8 @@ export const setDispositionAction = ({ commit }, payload) => {
   commit('SET_DISPOSITION', payload)
 }
 
-export const clearDispositionsAction = ({ commit }, endpoint) => {
-    commit('CLEAR_DISPOSITIONS', endpoint)
+export const clearDispositionsAction = ({ commit }) => {
+    commit('CLEAR_DISPOSITIONS')
 }
 
 export const getInsuranceCompaniesAction = async ({ commit }, payload) => {
@@ -208,8 +210,9 @@ export const blockCardAction = async ({ commit }, cardId) => {
   try {
     const id = { cardId: cardId }
     const accessToken = await getAccessToken()
-    await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'on' } })
+    const result = await axios.patch(`${apiUrl}/api/v1/cards`, JSON.stringify(id), { headers: { Authorization: `Bearer ${accessToken}`, 'Switch-Card': 'on' } })
     commit('BLOCK_CARD', sessionStorage.getItem('AccountId'))
+    return result
   }catch (e) {
     console.log(e)
   }
@@ -341,10 +344,32 @@ export const getAddressesAction = async ({ commit }, id) => {
         const accessToken = await getAccessToken();
         const result = await axios.get(`${apiUrl}/api/v1/addresses/${id}`, { headers: { Authorization: `Bearer ${accessToken}` } })
         if (result.status === 200){
+            console.log(result.data)
             commit('GET_ADDRESSES', result.data)
+        }else if (result.status === 204){
+            //Такой способ ну прям временная заглушка
+            const address = {
+                ResidenceAddress : {
+                    PatientCardId: null,
+                    AddressId: null,
+                    AddressTypeId: null,
+                    RegionId: null,
+                    RegionName: null,
+                    DistrictId: null,
+                    DistrictName: null,
+                    LocalityId: null,
+                    LocalityName: null,
+                    StreetId: null,
+                    StreetName: null,
+                    HouseNumber: null,
+                    Apartment: null
+                }
+            }
+            console.log(address)
+            commit('GET_ADDRESSES', address)
         }
     } catch (e) {
-        console.log(e.response)
+        console.log(e)
     }
 }
 

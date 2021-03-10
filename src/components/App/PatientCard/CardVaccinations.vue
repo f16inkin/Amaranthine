@@ -225,9 +225,10 @@ import Dialog from "primevue/components/dialog/Dialog";
     import Column from "primevue/components/column/Column";
     import Dropdown from "primevue/components/dropdown/Dropdown";
     import Textarea from "primevue/components/textarea/Textarea";
+    import InputText from "primevue/components/inputtext/InputText";
 export default {
   name: 'CardVaccinations',
-    components: { Textarea, Dropdown, Column, DataTable, Dialog, SpinPreloader, Button, Toolbar },
+    components: {InputText, Textarea, Dropdown, Column, DataTable, Dialog, SpinPreloader, Button, Toolbar },
     setup (){
         const store = useStore()
         const route = useRoute()

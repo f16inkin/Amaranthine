@@ -138,9 +138,11 @@ import Toolbar from 'primevue/components/toolbar/Toolbar'
 import Dialog from 'primevue/components/dialog/Dialog'
 import InputMask from 'primevue/components/inputmask/InputMask'
 import SpinPreloader from '../../Core/Preloaders/SpinPreloader'
+import InputText from "primevue/components/inputtext/InputText";
+import RadioButton from "primevue/components/radiobutton/RadioButton";
 export default {
   name: 'CardControlButtons',
-  components: { SpinPreloader, Button, InputMask, Dialog, Toolbar },
+  components: {RadioButton, InputText, SpinPreloader, Button, InputMask, Dialog, Toolbar },
   setup () {
     const store = useStore()
     const router = useRouter()

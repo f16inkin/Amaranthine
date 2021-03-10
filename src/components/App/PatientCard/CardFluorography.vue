@@ -272,6 +272,9 @@
         <div id="loader">
             <SpinPreloader v-show="isLoading"></SpinPreloader>
         </div>
+        <div id="toast">
+            <Toast position="bottom-right"/>
+        </div>
     </div>
 </template>
 
@@ -279,6 +282,8 @@
 import { computed, ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/components/toast/Toast'
 import Toolbar from 'primevue/components/toolbar/Toolbar'
 import DataTable from 'primevue/components/datatable/DataTable'
 import Column from 'primevue/components/column/Column'
@@ -291,10 +296,11 @@ import SpinPreloader from '../../Core/Preloaders/SpinPreloader'
 import Badge from 'primevue/components/badge/Badge'
 export default {
   name: 'CardFluorography',
-  components: {Badge, SpinPreloader, Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
+  components: {Toast, Badge, SpinPreloader, Textarea, Dropdown, InputText, Dialog, Button, Toolbar, DataTable, Column },
     setup (){
         const store = useStore()
         const route = useRoute()
+        const toast = useToast()
         store.dispatch('card/getFluorographiesAction', route.params.id)
         store.dispatch('card/getFluorographyOptionsAction')
         const fluorographies = computed(() => store.state.card.fluorographies)
@@ -358,7 +364,7 @@ export default {
             let quickDTO = {
                 PatientCardId: card.value.CardId,
                 FluorographyId: null,
-                FluorographyDate: formatDateForDB(new Date),//(new Date).toISOString().split('T')[0],
+                FluorographyDate: formatDateForDB(new Date),
                 FluorographyNumber: null,
                 FluorographyType: { typeId: 1 },
                 FluorographyResult: { resultId: 25 },
@@ -367,11 +373,14 @@ export default {
                 FluorographySnapshot: snapshot,
                 FluorographyNotation: null
             }
-            isLoading.value = true
+            //isLoading.value = true
             const result = await store.dispatch('card/createFluorographyAction', quickDTO)
             if (result.status === 201){
+                toast.add({severity: 'success', summary: 'Добавлено', detail: 'Флюорография добавлена', life: 2000});
                 await store.dispatch('card/getFluorographiesAction',  route.params.id)
-                setTimeout(() => {isLoading.value = false}, 100)
+                //setTimeout(() => {isLoading.value = false}, 100)
+            }else {
+                toast.add({severity: 'error', summary: 'Ошибка', detail: 'Запись не была добавлена в виду ошибки', life: 2000});
             }
         }
         const showFluorographyEditForm = (data) => {
@@ -400,12 +409,14 @@ export default {
             }
         }
         const deleteRecord = async (data) => {
-            isLoading.value = true
+            //isLoading.value = true
             const result = await store.dispatch('card/deleteFluorographyAction',  [data.FluorographyId])
             if (result.status === 204){
+                toast.add({severity: 'info', summary: 'Удалено', detail: 'Флюорография удалена', life: 2000});
                 await store.dispatch('card/getFluorographiesAction',  route.params.id)
-                setTimeout(() => {isLoading.value = false}, 500)
+                //setTimeout(() => {isLoading.value = false}, 500)
             }else{
+                toast.add({severity: 'error', summary: 'Ошибка', detail: 'Запись не была добавлена в виду ошибки', life: 2000});
                 console.log('Fluorography hasn\'t deleted')
             }
         }

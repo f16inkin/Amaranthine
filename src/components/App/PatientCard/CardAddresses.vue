@@ -310,7 +310,17 @@ export default {
             analyseSearchString(disassembledSearchString)
         }, 300)
       }else if (searchString.length === 0) {
-          store.dispatch('card/clearDispositionsAction', endpoint)
+          DTOContainer.RegionId = null;
+          DTOContainer.RegionName = null;
+          DTOContainer.DistrictId = null;
+          DTOContainer.DistrictName = null;
+          DTOContainer.LocalityId = null;
+          DTOContainer.LocalityName = null;
+          DTOContainer.StreetId = null;
+          DTOContainer.StreetName = null;
+          DTOContainer.HouseNumber = null;
+          DTOContainer.Apartment = null;
+          store.dispatch('card/clearDispositionsAction')
       }
     }
     store.dispatch('card/getAddressesAction', route.params.id)
