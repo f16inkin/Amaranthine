@@ -274,7 +274,7 @@ export default {
     const editAddresses = async() => {
         DTOContainer.PatientCardId = card.value.CardId
         DTOContainer.AddressId = residenceAddress.value.AddressId
-        DTOContainer.AddressTypeId = residenceAddress.value.AddressTypeId
+        DTOContainer.AddressTypeId = '6a5e1644-c192-4e6d-bc08-3be8ee6e9754'//residenceAddress.value.AddressTypeId
         DTOContainer.RegionId = residenceAddress.value.RegionId
         DTOContainer.RegionName = residenceAddress.value.RegionName
         DTOContainer.DistrictId = residenceAddress.value.DistrictId
