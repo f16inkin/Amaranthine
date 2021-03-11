@@ -19,15 +19,31 @@
                     <template #header>
                         <span style="color: blue;">СНИЛС, ЕНП</span>
                     </template>
-                    <div class="p-mb-2">
-                        <label class="p-text-bold">СНИЛС:</label>
-                    </div>
-                    <div class="p-inputgroup">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">СНИЛС:</label>
+                            </div>
+                            <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                        <InputText v-model="card.InsuranceCertificate" disabled/>
+                                <InputText v-model="card.InsuranceCertificate" disabled/>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label class="p-text-bold">Удостоверение военнослужащего:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                                <InputText  disabled/>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="p-grid">
                         <div class="p-col-6">
                             <div class="p-mb-2">
@@ -138,14 +154,29 @@
                     <template #header>
                         <span style="color: blue;">СНИЛС, ЕНП</span>
                     </template>
-                    <div class="p-mb-2">
-                        <label for="insuranceCertificate" class="p-text-bold">СНИЛС:<i style="color:red">*</i></label>
-                    </div>
-                    <div class="p-inputgroup">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label for="insuranceCertificate" class="p-text-bold">СНИЛС:<i style="color:red">*</i></label>
+                            </div>
+                            <div class="p-inputgroup">
                             <span class="p-inputgroup-addon">
                             <i class="pi pi-id-card"></i>
                             </span>
-                        <InputMask id="insuranceCertificate" mask="999-999-999 99" v-model="card.InsuranceCertificate" placeholder="***-***-*** **"/>
+                                <InputMask mask="999-999-999 99" v-model="card.InsuranceCertificate" placeholder="***-***-*** **"/>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <label for="insuranceCertificate" class="p-text-bold">Удостоверение военнослужащего:</label>
+                            </div>
+                            <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                            <i class="pi pi-id-card"></i>
+                            </span>
+                                <InputMask id="insuranceCertificate" mask="a* 9999999" placeholder="** *******" disabled/>
+                            </div>
+                        </div>
                     </div>
                     <div class="p-grid">
                         <div class="p-col-6">
